@@ -1,5 +1,6 @@
 import shelve
 import pickle
+import semidbm
 from collections import defaultdict, namedtuple
 from operator import itemgetter
 import re
@@ -10,10 +11,11 @@ tokenize_regex = re.compile(r'[A-Za-z]+')
 
 class ReviewFinder:
     def __init__(self, city):
-        self.db = shelve.open(city + '.db', protocol=pickle.HIGHEST_PROTOCOL)
+        self.f = semidbm.open(city + '.db', flag='r')
+        self.db = shelve.Shelf(self.f, protocol=pickle.HIGHEST_PROTOCOL)
     
     def __del__(self):
-        self.db.close()
+        self.f.close()
     
     def __topic_list_for_term(self, term):
         try:
