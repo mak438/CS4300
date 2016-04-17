@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <title></title>
+    <meta content="">
+    <style></style>
+  </head>
+  <body>
+    {% for review in reviews %}
+      <div>
+        <p>{{ review.text }}</p>
+        <a href="/reviews/more?city={{ city }}&review_id={{ review.review_id }}">Find more</a>
+        <a href="/reviews/business?business_id={{ review.business_id }}">See this business</a>
+      </div>
+    {% endfor %}
+    </table>
+  </body>
+</html>
