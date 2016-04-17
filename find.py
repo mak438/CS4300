@@ -13,16 +13,16 @@ class ReviewFinder:
         self.db.close()
     
     def __topic_list_for_term(self, term):
-        topic_list = self.db["t=" + term]
-        if topic_list is None:
+        try:
+            return self.db["t=" + term]
+        except KeyError:
             return []
-        return topic_list
     
     def __review_list_for_topic(self, topic):
-        review_list = self.db["c=" + str(topic)]
-        if review_list is None:
+        try:
+            return self.db["c=" + topic]
+        except KeyError:
             return []
-        return review_list
     
     def __review_result(self, review_id, weight):
         review = self.db["r=" + review_id]
