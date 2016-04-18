@@ -5,7 +5,7 @@ from collections import defaultdict, namedtuple
 from operator import itemgetter
 import re
 
-ReviewResult = namedtuple('ReviewResult', ['review_id', 'weight', 'text', 'business_id'])
+ReviewResult = namedtuple('ReviewResult', ['review_id', 'weight', 'text', 'business_id', 'business_name'])
 
 tokenize_regex = re.compile(r'[A-Za-z]+')
 
@@ -30,8 +30,8 @@ class ReviewFinder:
             return []
     
     def __review_result(self, review_id, weight):
-        review = self.db["r=" + review_id]
-        return ReviewResult(review_id=review_id, weight=weight, text=review[0], business_id=review[1])
+        text, business_id = self.db["r=" + review_id]
+        return ReviewResult(review_id=review_id, weight=weight, text=text, business_id=business_id, business_name=self.db["b=" + business_id])
     
     def find_reviews(self, keywords, limit=None):
         topics_by_weight = defaultdict(float)
