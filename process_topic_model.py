@@ -4,9 +4,15 @@ import collections
 import shelve
 import pickle
 import json
+import semidbm
 from os.path import basename
 
 db = collections.defaultdict(list)
+
+businesses_to_collect = set()
+
+with open('Business.json') as f:
+    businesses = {b['business_id'].encode('utf-8'): b['name'].encode('utf-8') for b in json.load(f)}
 
 with open(city + '.keys.txt') as keys:
     for row in keys:
@@ -29,9 +35,10 @@ with open(city + '.topics.txt') as topics:
 with open(city + '.json') as reviews:
     reviews_list = json.load(reviews)
     for row in reviews_list:
-        db["r=" + str(row['review_id'])] = (row['text'], str(row['business_id']))
+        db["r=" + row['review_id'].encode('utf-8')] = (row['text'].encode('utf-8'), row['business_id'].encode('utf-8'))
+        businesses_to_collect.add(row['business_id'].encode('utf-8'))
 
-s = shelve.open(city + '.db', flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+s = shelve.Shelf(semidbm.open(city + '.db', flag='n'), protocol=pickle.HIGHEST_PROTOCOL)
 for k,v in db.items():
     s[k] = v
 s.close()

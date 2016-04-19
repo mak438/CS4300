@@ -9,9 +9,10 @@ import shelve
 
 tokenize_regex = re.compile(r'[A-Za-z]+')
 
-db = collections.defaultdict(list)
+categories = collections.defaultdict(list)
 review_dict = {}
 
+terms_to_collect = set()
 businesses_to_collect = set()
 
 with open('Business.json') as f:
@@ -20,18 +21,20 @@ with open('Business.json') as f:
 with open(city + '.json') as reviews:
     reviews_list = json.load(reviews)
     for review in reviews_list:
-        review_dict["r=" + review['review_id'].encode('utf-8')] = (review['text'], review['business_id'].encode('utf-8'))
+        review_dict[review['review_id'].encode('utf-8')] = (review['text'].encode('utf-8'), review['business_id'].encode('utf-8'))
         
-        for term in tokenize_regex.findall(review['text']):
-            db["t=" + str(term)].append((term.encode('utf-8'), 1))
-            db["c=" + str(term)].append((review['review_id'].encode('utf-8'), 1.0))
+        for term in tokenize_regex.findall(review['text'].lower()):
+            categories[term.encode('utf-8')].append((review['review_id'].encode('utf-8'), 1.0))
+            terms_to_collect.add(term.encode('utf-8'))
             businesses_to_collect.add(review['business_id'].encode('utf-8'))
 
 s = shelve.Shelf(semidbm.open(city + '-baseline.db', flag='n'), protocol=pickle.HIGHEST_PROTOCOL)
-for k,v in db.items():
-    s[k] = v
+for k,v in categories.items():
+    s["c=" + k] = v
 for k, v in review_dict.items():
-    s[k] = v
+    s["r=" + k] = v
 for b in businesses_to_collect:
     s["b=" + b] = businesses[b]
+for t in terms_to_collect:
+    s["t=" + t] = [t]
 s.close()
