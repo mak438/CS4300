@@ -36,7 +36,6 @@ class ReviewFinder:
     def find_reviews(self, keywords, limit=None):
         topics_by_weight = defaultdict(float)
         for term in tokenize_regex.findall(keywords):
-            print(self.__topic_list_for_term(term))
             for topic, weight in self.__topic_list_for_term(term):
                 topics_by_weight[topic] += weight
         
