@@ -36,5 +36,5 @@ for k, v in review_dict.items():
 for b in businesses_to_collect:
     s["b=" + b] = businesses[b]
 for t in terms_to_collect:
-    s["t=" + t] = [t]
+    s["t=" + t] = [(t,1.0)]
 s.close()

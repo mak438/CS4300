@@ -36,12 +36,13 @@ class ReviewFinder:
     def find_reviews(self, keywords, limit=None):
         topics_by_weight = defaultdict(float)
         for term in tokenize_regex.findall(keywords):
+            print(self.__topic_list_for_term(term))
             for topic, weight in self.__topic_list_for_term(term):
                 topics_by_weight[topic] += weight
         
         reviews_by_weight = defaultdict(float)
         for topic, topic_weight in topics_by_weight.items():
-            for review, review_weight in self.__review_list_for_topic(topic):
+            for review, review_weight in self.__review_list_for_topic(str(topic)):
                 reviews_by_weight[review] += topic_weight * review_weight
         
         reviews = sorted(reviews_by_weight.items(), key=itemgetter(1), reverse=True)
