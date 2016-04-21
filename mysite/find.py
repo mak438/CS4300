@@ -67,6 +67,6 @@ class ReviewFinder:
         return [review for review in self.find_reviews(review_text, limit) if review.review_id != review_id]
         
     def find_businesses(self, review_id, business_id, limit=None):
-        business_name = self.db["b=" + business_id]
-        this_business = BusinessResult(business_id=to_url(business_name, self.city), business_name=business_name)
-        return [this_business].extend(set([r.business for r in self.find_more(review_id, limit) if r.business.business_id!=business_id]))
+        name, categories = self.db["b=" + business_id]
+        this_business = BusinessResult(business_id=to_url(name, self.city), name=name, categories=categories)
+        return [this_business] + [r.business for r in self.find_more(review_id, limit) if r.business.business_id!=business_id]
