@@ -61,7 +61,7 @@
 			$('.more').each(function() {
 				var content = $(this).html();
 				if(content.length > showChar) {
-					var c = content.substr(0, showChar);
+					var c = content.substr(0, showChar-1);
 					var h = content.substr(showChar-1, content.length - showChar);
 					var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
 					$(this).html(html);
@@ -123,7 +123,8 @@
 		<input type="radio" name="location" value="Las Vegas">Las Vegas
 		<input type="radio" name="location" value="Phoenix">Phoenix
 		<input type="radio" name="location" value="Pittsburgh">Pittsburgh
-		<input type="radio" name="location" value="Urbana" checked>Urbana
+		<input type="radio" name="location" value="Urbana-Baseline" checked>Urbana Baseline
+		<input type="radio" name="location" value="Urbana">Urbana
 		<input type="radio" name="location" value="Scottsdale">Scottsdale
 		<input type="radio" name="location" value="Charlotte">Charlotte
 	</form>

@@ -79,7 +79,7 @@
 				var content = $(this).html();
 				if(content.length > showChar) {
 
-					var c = content.substr(0, showChar);
+					var c = content.substr(0, showChar-1);
 					var h = content.substr(showChar-1, content.length - showChar);
 
 					var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
@@ -136,6 +136,7 @@
 		<input type="radio" id="Las Vegas" name="location" value="Las Vegas">Las Vegas
 		<input type="radio" id="Phoenix"  name="location" value="Phoenix">Phoenix
 		<input type="radio" id="Pittsburgh"  name="location" value="Pittsburgh">Pittsburgh
+		<input type="radio" id="Urbana-Baseline" name="location" value="Urbana">Urbana Baseline
 		<input type="radio" id="Urbana" name="location" value="Urbana">Urbana
 		<input type="radio" id="Scottsdale" name="location" value="Scottsdale">Scottsdale
 		<input type="radio" id="Charlotte" name="location" value="Charlotte">Charlotte
@@ -159,13 +160,13 @@
 				<td >
 					<div class="panel" align="center">
 						<div align="left" class="panel-heading reviewHeader" >
-							Review: {{ forloop.counter }}
+							Review: {{ forloop.counter }} |  <b>{{review.business_name}}</b>
 						</div>
 						<div class="more panel-body reviewTextAlign">
 							{{ review.text }}						
 						</div>
 						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
-						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&business_id={{review.business_id}}">See this Business</a>
+						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business_id}}">See this Business</a>
 						<br><br>
 					</div>
 				</td>				
