@@ -7,7 +7,12 @@
 
 	<style type="text/css">
 		.headerClass{
-			font-size : 3em;
+			font-size : 3.5em;
+			font-family :"Futura"; 
+			text-align: center;
+		}
+		.subHeaderClass{
+			font-size : 2em;
 			font-family :"Futura"; 
 			text-align: center;
 		}
@@ -16,6 +21,7 @@
 		}
 		.formColor{
 			color: white;
+			font-size: 14pt;
 		}
 		input[type="radio"]{
 			margin-left: 3em;
@@ -69,17 +75,17 @@
 			});
 
 			$(".morelink").click(function(){
-			if($(this).hasClass("less")) {
-				$(this).removeClass("less");
-				$(this).html(moretext);
-			} else {
-				$(this).addClass("less");
-				$(this).html(lesstext);
-			}
-			$(this).parent().prev().toggle();
-			$(this).prev().toggle();
-			return false;
-		});
+				if($(this).hasClass("less")) {
+					$(this).removeClass("less");
+					$(this).html(moretext);
+				} else {
+					$(this).addClass("less");
+					$(this).html(lesstext);
+				}
+				$(this).parent().prev().toggle();
+				$(this).prev().toggle();
+				return false;
+			});
 
 		});
 
@@ -115,10 +121,12 @@
 	</script>
 </head>
 
-<body background="../static/bg.jpg">        
+<body background="../static/bg.jpg">     
+	<br>
+	<br>   
 	<h3 class="headerClass textColor">Restaurant Recommendations System</h3>
-	<h6 class="headerClass textColor">based on Yelp Reviews </h6>
-
+	<h6 class="subHeaderClass textColor">based on Yelp Reviews </h6>
+	<br>
 	<form action="" class="radioBtnGrp formColor">
 		<input type="radio" name="location" value="Las Vegas">Las Vegas
 		<input type="radio" name="location" value="Phoenix">Phoenix
@@ -128,17 +136,18 @@
 		<input type="radio" name="location" value="Scottsdale">Scottsdale
 		<input type="radio" name="location" value="Charlotte">Charlotte
 	</form>
-
+	<br>
+	<br>
 	<form class="form-inline global-search" method='GET'>
 		<br><br>
-		<div class="form-group">
+		<div class="form-group" width="1000px">
 			<input id="searchInput" type="text" class="form-control" placeholder="Your Input" onkeydown = "if (event.keyCode == 13)
-                        showReviewsviaEnter()">
+			showReviewsviaEnter()">
 		</div>
 		<a id="submitBtn" class="btn btn-danger" onclick="showReviews()"> Go! </a>
 	</form>
 
-	<div class="reviewDiv tableVisibility" >
+	<!-- <div class="reviewDiv tableVisibility" >
 		<br>
 		<table width="750" align="center">
 			{% for review in reviews %}
@@ -159,6 +168,6 @@
 			</tr>
 			{% endfor %}
 		</table>
-	</div>
+	</div> -->
 </body>
 </html>
