@@ -35,12 +35,12 @@ class ReviewFinder:
         except KeyError:
             return []
     
-    def __review_result(self, review):
-        review_id, weight, stars, date = review
-        text, business_id = self.db["r=" + review_id]
-        return ReviewResult(review_id=review_id, weight=weight, text=text, stars=stars, date=date, business=self.business_review(business_id))
+    def __review_result(self, review_id, weight):
+        review = self.db["r=" + review_id]
+        text, business_id, stars, date = review
+        return ReviewResult(review_id=review_id, weight=weight, text=text, stars=stars, date=date, business=self.__business_result(business_id))
     
-    def __business_review(self, business_id):
+    def __business_result(self, business_id):
         name, categories = self.db["b=" + business_id]
         return BusinessResult(business_id=business_id, name=name, categories=categories)
     
