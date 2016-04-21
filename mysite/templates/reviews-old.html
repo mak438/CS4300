@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <title></title>
+    <meta content="">
+    <style>
+    .headerClass{
+      color:red;
+    }
+
+</style>
+     <link rel="stylesheet" href="../static/bootstrap.min.css">
+     <link rel="stylesheet" href="../static/main.css">
+
+    
+  </head>
+  <body>
+  <h2 class="headerClass"> Restaurant recommendations based on Yelp Reviews </h2>
+
+  <input type="search" name="keywordSearch">
+
+	<div class="form-group">
+        <input id="input" type="text" name="search" class="form-control" placeholder="Your Input">
+    </div>
+
+    {% for review in reviews %}
+      <div>
+        <p>{{ review.text }}</p>
+        <a href="/reviews/more?city={{ city }}&review_id={{ review.review_id }}">Find more</a>
+        <a href="/reviews/business?business_id={{ review.business_id }}">See this business</a>
+      </div>
+    {% endfor %}
+    </table>
+  </body>
+</html>

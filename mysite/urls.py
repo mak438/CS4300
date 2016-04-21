@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^more', views.more, name='more'),
     url(r'^pt/', include('project_template.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^home', views.home, name='reviews'),
 ]

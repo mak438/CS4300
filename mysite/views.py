@@ -12,3 +12,6 @@ def more(request):
     city = request.GET.get('city')
     f = ReviewFinder(city)
     return render_to_response('./reviews.html', {'city': city, 'reviews': f.find_more(str(request.GET.get('review_id')), 5) })
+
+def home(request):
+    return render_to_response('./index.html');
