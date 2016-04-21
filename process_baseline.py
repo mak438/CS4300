@@ -16,7 +16,7 @@ terms_to_collect = set()
 businesses_to_collect = set()
 
 with open('Business.json') as f:
-    businesses = {b['business_id'].encode('utf-8'): (b['name'].encode('utf-8'), b['categories']) for b in json.load(f)}
+    businesses = {b['business_id'].encode('utf-8'): (b['name'].encode('utf-8'), [cat for cat in b['categories'] if cat != 'Restaurants']) for b in json.load(f)}
 
 with open(city + '.json') as reviews:
     reviews_list = json.load(reviews)
@@ -28,7 +28,7 @@ with open(city + '.json') as reviews:
             terms_to_collect.add(term.encode('utf-8'))
             businesses_to_collect.add(review['business_id'].encode('utf-8'))
 
-s = shelve.Shelf(semidbm.open(city + '-baseline.db', flag='n'), protocol=pickle.HIGHEST_PROTOCOL)
+s = shelve.Shelf(semidbm.open(city + '-Baseline.db', flag='n'), protocol=pickle.HIGHEST_PROTOCOL)
 for k,v in categories.items():
     s["c=" + k] = v
 for k, v in review_dict.items():
