@@ -1,8 +1,8 @@
+<!DOCTYPE HTML>
 <html>
 <head>
 	<link rel="stylesheet" href="../static/bootstrap.min.css">
 	<link rel="stylesheet" href="../static/main.css">
-	<link href="../static/stylish-portfolio.css" rel="stylesheet">
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 
 	<style type="text/css">
@@ -68,9 +68,7 @@
 				}
 			});
 
-		});
-
-		$(".morelink").click(function(){
+			$(".morelink").click(function(){
 			if($(this).hasClass("less")) {
 				$(this).removeClass("less");
 				$(this).html(moretext);
@@ -83,9 +81,14 @@
 			return false;
 		});
 
+		});
+
+		
+
 		cityName = null;
 		searchText = null;
 		function showReviews(){
+
 			console.log("button clicked!");
 			var cities = document.getElementsByName('location');
 			for (var i = 0, length = cities.length; i < length; i++) {
@@ -99,6 +102,14 @@
 			searchText = document.getElementById("searchInput").value;
 			console.log(searchText);
 			document.getElementById("submitBtn").setAttribute("href","/reviews?city="+cityName+"&keywords="+searchText);
+
+		}
+
+		function showReviewsviaEnter(){
+
+
+			console.log("via enter")
+			window.location="/reviews?city="+cityName+"&keywords="+searchText;
 
 		}
 	</script>
@@ -120,7 +131,8 @@
 	<form class="form-inline global-search" method='GET'>
 		<br><br>
 		<div class="form-group">
-			<input id="searchInput" type="text" onkeypress="test()" class="form-control" placeholder="Your Input">
+			<input id="searchInput" type="text" class="form-control" placeholder="Your Input" onkeydown = "if (event.keyCode == 13)
+                        showReviewsviaEnter()">
 		</div>
 		<a id="submitBtn" class="btn btn-danger" onclick="showReviews()"> Go! </a>
 	</form>
@@ -138,8 +150,8 @@
 						<div class="more panel-body reviewTextAlign">
 							{{ review.text }}						
 						</div>
-						<a class="btn btn-danger" align="center" href="/reviews/more?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
-						<a class="btn btn-danger" align="center" href="/reviews/business?business_id={{ review.business_id }}">See this Business</a>
+						<a class="btn btn-danger" align="center" href="/moreReviews/city={{ city }}&review_id={{ review.review_id }}" >Find more Reviews</a>
+						<a class="btn btn-danger" align="center" href="/showBusinesuses/city={{ city }}&business_id={{review.business_id}}">See this Business</a>
 						<br><br>
 					</div>
 				</td>				

@@ -19,8 +19,9 @@ from . import views
 
 urlpatterns = [
     url(r'^reviews', views.reviews, name='reviews'),
-    url(r'^more', views.more, name='more'),
+    url(r'^moreReviews', views.moreReviews, name='moreReviews'),
     url(r'^pt/', include('project_template.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^home', views.home, name='reviews'),
+    url(r'^showBusinesses',views.showBusinesses,name = 'showBusinesses')
 ]

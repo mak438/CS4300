@@ -152,25 +152,22 @@
 
 	<div class="reviewDiv" >
 		<br>
-
 		<table width="750" align="center">
-			{% for review in reviews %}
 			<tr>
 				<td >
 					<div class="panel" align="center">
 						<div align="left" class="panel-heading reviewHeader" >
-							Review: {{ forloop.counter }}
+							1
 						</div>
 						<div class="more panel-body reviewTextAlign">
-							{{ review.text }}						
+							{{ businesses }}						
 						</div>
 						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
-						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&business_id={{review.business_id}}">See this Business</a>
+						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{review.review_id}}">See this Business</a>
 						<br><br>
 					</div>
 				</td>				
 			</tr>
-			{% endfor %}
 		</table>
 	</div>
 </body>
