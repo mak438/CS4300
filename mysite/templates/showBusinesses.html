@@ -150,7 +150,7 @@
 		</div>
 		<a id="submitBtn" class="btn btn-danger" onclick="showReviews()"> Go! </a>
 	</form>
-
+	<br><br>
 	<div class="reviewDiv" >
 		<br>
 		<table width="750" align="center">
@@ -161,13 +161,13 @@
 						<div align="left" class="panel-heading reviewHeader" >
 							Restaurant {{ forloop.counter }}
 						</div>					
-
-						<a href="http://www.yelp.com/biz/{{business.business_id }}" class="more panel-body reviewTextAlign">
+						<a href="http://www.yelp.com/biz/{{business.url}}" class="more panel-body reviewTextAlign">
 							{{ business.name }}						
 						</a>
+						Categories : {{ business.categories}}
 						<!-- <a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
 						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{review.review_id}}">See this Business</a> -->
-						<br><br>
+						<!-- <br><br> -->
 					</div>
 				</td>				
 			</tr>

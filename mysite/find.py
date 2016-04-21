@@ -7,13 +7,13 @@ import string
 import re
 
 ReviewResult = namedtuple('ReviewResult', ['review_id', 'weight', 'text', 'date', 'stars', 'business'])
-BusinessResult = namedtuple('BusinessResult', ['business_id', 'name', 'categories'])
+BusinessResult = namedtuple('BusinessResult', ['business_id', 'url', 'name', 'categories', 'stars'])
 
 tokenize_regex = re.compile(r'[A-Za-z]+')
 
 def to_url(business_name, city):
-    return business_name.replace('&', 'and').translate(None, string.punctuation).replace(' ', '-') + '-' + city.replace('-Baseline','')
-
+    x = (''.join([c for c in business_name if 0 < ord(c) < 127])).replace('&', 'and').translate(None, string.punctuation).replace(' ', '-') + '-' + city.replace('-Baseline','')
+    return x
 class ReviewFinder:
     def __init__(self, city):
         self.city = city
@@ -41,9 +41,9 @@ class ReviewFinder:
         return ReviewResult(review_id=review_id, weight=weight, text=text, stars=[True] * stars + [False] * (5-stars), date=date, business=self.__business_result(business_id))
     
     def __business_result(self, business_id):
-        name, categories = self.db["b=" + business_id]
-        return BusinessResult(business_id=business_id, name=name, categories=categories)
-    
+        name, categories, stars = self.db["b=" + business_id]
+        return BusinessResult(business_id=business_id, url=to_url(name, self.city), name=name, categories=', '.join(categories), stars=stars)
+
     def find_reviews(self, keywords, limit=None):
         topics_by_weight = defaultdict(float)
         for term in tokenize_regex.findall(keywords):
@@ -67,6 +67,5 @@ class ReviewFinder:
         return [review for review in self.find_reviews(review_text, limit) if review.review_id != review_id]
         
     def find_businesses(self, review_id, business_id, limit=None):
-        name, categories = self.db["b=" + business_id]
-        this_business = BusinessResult(business_id=to_url(name, self.city), name=name, categories=categories)
-        return [this_business] + [r.business for r in self.find_more(review_id, limit) if r.business.business_id!=business_id]
+        this_business = self.__business_result(business_id)
+        return [this_business] + list(set([r.business for r in self.find_more(review_id, limit) if r.business.business_id!=business_id]))

@@ -16,7 +16,7 @@ terms_to_collect = set()
 businesses_to_collect = set()
 
 with open('Business.json') as f:
-    businesses = {b['business_id'].encode('utf-8'): (b['name'].encode('utf-8'), [cat for cat in b['categories'] if cat != 'Restaurants']) for b in json.load(f)}
+    businesses = {b['business_id'].encode('utf-8'): (b['name'].encode('utf-8'), [cat.encode('utf-8') for cat in b['categories'] if cat != 'Restaurants'], b['stars']) for b in json.load(f)}
 
 with open(city + '.json') as reviews:
     reviews_list = json.load(reviews)
