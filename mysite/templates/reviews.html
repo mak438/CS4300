@@ -51,6 +51,9 @@
 			border-color: #ebccd1;
 			background-color: #d9534f;
 		}
+		.rating {
+			width:3em;
+		}
 	</style>
 	<script>
 		
@@ -90,17 +93,17 @@
 			});
 
 			$(".morelink").click(function(){
-			if($(this).hasClass("less")) {
-				$(this).removeClass("less");
-				$(this).html(moretext);
-			} else {
-				$(this).addClass("less");
-				$(this).html(lesstext);
-			}
-			$(this).parent().prev().toggle();
-			$(this).prev().toggle();
-			return false;
-		});
+				if($(this).hasClass("less")) {
+					$(this).removeClass("less");
+					$(this).html(moretext);
+				} else {
+					$(this).addClass("less");
+					$(this).html(lesstext);
+				}
+				$(this).parent().prev().toggle();
+				$(this).prev().toggle();
+				return false;
+			});
 
 		});
 		
@@ -162,8 +165,23 @@
 						<div align="left" class="panel-heading reviewHeader" >
 							Review : {{ forloop.counter }}  |  {{review.business.name}}
 						</div>
-						<div align="left" class="panel panel-info">
+						<div align="left" class="panel">
 							&nbsp;&nbsp;Under : {{review.business.categories}}
+						</div>
+						<div class="panel">
+						<span style="float:left"> &nbsp;&nbsp;Date: {{ review.date }}	</span>					<span style="float:right">
+						{% for val in review.stars %}
+							{% if val == True%}
+							<span class="rating">
+								<span>&#x2605;</span>
+							</span>
+							{% else %}
+							<span class="rating">
+								<span>&#x2606;</span>
+							</span>
+							{% endif %}
+							{% endfor %}&nbsp;
+						</span>
 						</div>
 						<div class="more panel-body reviewTextAlign">
 							{{ review.text }}						
@@ -172,10 +190,11 @@
 						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}">See this Business</a>
 						<br><br>
 					</div>
-				</td>				
-			</tr>
-			{% endfor %}
-		</table>
-	</div>
+				</div>
+			</td>				
+		</tr>
+		{% endfor %}
+	</table>
+</div>
 </body>
 </html>

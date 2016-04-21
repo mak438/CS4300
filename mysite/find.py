@@ -38,7 +38,7 @@ class ReviewFinder:
     def __review_result(self, review_id, weight):
         review = self.db["r=" + review_id]
         text, business_id, stars, date = review
-        return ReviewResult(review_id=review_id, weight=weight, text=text, stars=stars, date=date, business=self.__business_result(business_id))
+        return ReviewResult(review_id=review_id, weight=weight, text=text, stars=[True] * stars + [False] * (5-stars), date=date, business=self.__business_result(business_id))
     
     def __business_result(self, business_id):
         name, categories, stars = self.db["b=" + business_id]
