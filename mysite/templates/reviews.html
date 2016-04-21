@@ -51,6 +51,9 @@
 			border-color: #ebccd1;
 			background-color: #d9534f;
 		}
+		.rating {
+			width:3em;
+		}
 	</style>
 	<script>
 		
@@ -90,17 +93,17 @@
 			});
 
 			$(".morelink").click(function(){
-			if($(this).hasClass("less")) {
-				$(this).removeClass("less");
-				$(this).html(moretext);
-			} else {
-				$(this).addClass("less");
-				$(this).html(lesstext);
-			}
-			$(this).parent().prev().toggle();
-			$(this).prev().toggle();
-			return false;
-		});
+				if($(this).hasClass("less")) {
+					$(this).removeClass("less");
+					$(this).html(moretext);
+				} else {
+					$(this).addClass("less");
+					$(this).html(lesstext);
+				}
+				$(this).parent().prev().toggle();
+				$(this).prev().toggle();
+				return false;
+			});
 
 		});
 		
@@ -136,7 +139,7 @@
 		<input type="radio" id="Las Vegas" name="location" value="Las Vegas">Las Vegas
 		<input type="radio" id="Phoenix"  name="location" value="Phoenix">Phoenix
 		<input type="radio" id="Pittsburgh"  name="location" value="Pittsburgh">Pittsburgh
-		<input type="radio" id="Urbana-Baseline" name="location" value="Urbana">Urbana Baseline
+		<input type="radio" id="Urbana-Baseline" name="location" value="Urbana-Baseline">Urbana Baseline
 		<input type="radio" id="Urbana" name="location" value="Urbana">Urbana
 		<input type="radio" id="Scottsdale" name="location" value="Scottsdale">Scottsdale
 		<input type="radio" id="Charlotte" name="location" value="Charlotte">Charlotte
@@ -160,19 +163,32 @@
 				<td >
 					<div class="panel" align="center">
 						<div align="left" class="panel-heading reviewHeader" >
-							Review: {{ forloop.counter }} |  <b>{{review.business_name}}</b>
+							Review: {{ forloop.counter }} |  <b>{{review.business.name}}</b>   |  
+							Rating = {{ review.stars }}
+							{% for val in review.stars %}
+							{% if val == True%}
+							<span class="rating">
+								<span>&#x2605;</span>
+							</span>
+							{% else %}
+							<span class="rating">
+								<span>&#x2606;</span>
+							</span>
+							{% endif %}
+							{% endfor %}
 						</div>
-						<div class="more panel-body reviewTextAlign">
-							{{ review.text }}						
-						</div>
-						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
-						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business_id}}">See this Business</a>
-						<br><br>
 					</div>
-				</td>				
-			</tr>
-			{% endfor %}
-		</table>
-	</div>
+					<div class="more panel-body reviewTextAlign">
+						{{ review.text }}						
+					</div>
+					<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
+					<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}">See this Business</a>
+					<br><br>
+				</div>
+			</td>				
+		</tr>
+		{% endfor %}
+	</table>
+</div>
 </body>
 </html>

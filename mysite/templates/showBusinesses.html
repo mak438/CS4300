@@ -137,6 +137,7 @@
 		<input type="radio" id="Phoenix"  name="location" value="Phoenix">Phoenix
 		<input type="radio" id="Pittsburgh"  name="location" value="Pittsburgh">Pittsburgh
 		<input type="radio" id="Urbana" name="location" value="Urbana">Urbana
+		<input type="radio" id="Urbana-Baseline" name="location" value="Urbana">Urbana Baseline
 		<input type="radio" id="Scottsdale" name="location" value="Scottsdale">Scottsdale
 		<input type="radio" id="Charlotte" name="location" value="Charlotte">Charlotte
 	</form>
@@ -162,9 +163,8 @@
 						</div>					
 
 						<a href="http://www.yelp.com/biz/{{business.business_id }}" class="more panel-body reviewTextAlign">
-							{{ business.business_name }}						
+							{{ business.name }}						
 						</a>
-
 						<!-- <a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
 						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{review.review_id}}">See this Business</a> -->
 						<br><br>
