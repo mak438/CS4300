@@ -153,21 +153,26 @@
 	<div class="reviewDiv" >
 		<br>
 		<table width="750" align="center">
+		{% for business in businesses %}
 			<tr>
 				<td >
 					<div class="panel" align="center">
 						<div align="left" class="panel-heading reviewHeader" >
-							1
-						</div>
-						<div class="more panel-body reviewTextAlign">
-							{{ businesses }}						
-						</div>
-						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
-						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{review.review_id}}">See this Business</a>
+							Restaurant {{ forloop.counter }}
+						</div>					
+
+						<a href="http://www.yelp.com/biz/{{business.business_id }}" class="more panel-body reviewTextAlign">
+							{{ business.business_name }}						
+						</a>
+
+						<!-- <a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
+						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{review.review_id}}">See this Business</a> -->
 						<br><br>
 					</div>
 				</td>				
 			</tr>
+
+			{% endfor %}
 		</table>
 	</div>
 </body>
