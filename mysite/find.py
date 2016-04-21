@@ -42,7 +42,7 @@ class ReviewFinder:
     
     def __business_result(self, business_id):
         name, categories = self.db["b=" + business_id]
-        return BusinessResult(business_id=business_id, name=name, categories=categories)
+        return BusinessResult(business_id=business_id, name=name, categories=', '.join(categories))
     
     def find_reviews(self, keywords, limit=None):
         topics_by_weight = defaultdict(float)
@@ -69,4 +69,4 @@ class ReviewFinder:
     def find_businesses(self, review_id, business_id, limit=None):
         name, categories = self.db["b=" + business_id]
         this_business = BusinessResult(business_id=to_url(name, self.city), name=name, categories=categories)
-        return [this_business] + [r.business for r in self.find_more(review_id, limit) if r.business.business_id!=business_id]
+        return [this_business] + list(set([r.business for r in self.find_more(review_id, limit) if r.business.business_id!=business_id]))
