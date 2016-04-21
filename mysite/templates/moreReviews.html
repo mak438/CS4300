@@ -136,6 +136,7 @@
 		<input type="radio" id="Las Vegas" name="location" value="Las Vegas">Las Vegas
 		<input type="radio" id="Phoenix"  name="location" value="Phoenix">Phoenix
 		<input type="radio" id="Pittsburgh"  name="location" value="Pittsburgh">Pittsburgh
+		<input type="radio" id="Urbana-Baseline" name="location" value="Urbana-Baseline">Urbana Baseline
 		<input type="radio" id="Urbana" name="location" value="Urbana">Urbana
 		<input type="radio" id="Scottsdale" name="location" value="Scottsdale">Scottsdale
 		<input type="radio" id="Charlotte" name="location" value="Charlotte">Charlotte
@@ -149,7 +150,7 @@
 		</div>
 		<a id="submitBtn" class="btn btn-danger" onclick="showReviews()"> Go! </a>
 	</form>
-
+	<br><br>
 	<div class="reviewDiv" >
 		<br>
 		<table width="750" align="center">
@@ -158,13 +159,16 @@
 				<td >
 					<div class="panel" align="center">
 						<div align="left" class="panel-heading reviewHeader" >
-							Review: {{ forloop.counter }}
+							Review : {{ forloop.counter }}  |  {{review.business.name}}
+						</div>
+						<div align="left" clas="panel panel-info">
+							&nbsp;&nbsp;Under : {{review.business.categories}} 
 						</div>
 						<div class="more panel-body reviewTextAlign">
 							{{ review.text }}						
 						</div>
 						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
-						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&business_id={{review.business_id}}">See this Business</a>
+						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{ review.review_id }}&business_id={{review.business.business_id}}">See this Business</a>
 						<br><br>
 					</div>
 				</td>				
