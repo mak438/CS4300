@@ -42,7 +42,7 @@ class ReviewFinder:
     
     def __business_result(self, business_id):
         name, categories, stars = self.db["b=" + business_id]
-        return BusinessResult(business_id=business_id, url=to_url(name, self.city), name=name, categories=', '.join(categories), stars=stars)
+        return BusinessResult(business_id=business_id, url=to_url(name, self.city), name=name, categories=', '.join(categories), stars=[True] * int(stars) + [False] * (5-int(stars)))
 
     def find_reviews(self, keywords, limit=None):
         topics_by_weight = defaultdict(float)

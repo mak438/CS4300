@@ -161,6 +161,19 @@
 					<div class="panel" align="center">
 						<div align="left" class="panel-heading reviewHeader" >
 							Restaurant {{ forloop.counter }}
+						<span style="float:right">
+						{% for val in business.stars %}
+							{% if val == True%}
+							<span class="rating">
+								<span>&#x2605;</span>
+							</span>
+							{% else %}
+							<span class="rating">
+								<span>&#x2606;</span>
+							</span>
+							{% endif %}
+							{% endfor %}&nbsp;
+						</span>
 						</div>					
 						<a href="http://www.yelp.com/biz/{{business.url}}" class="more panel-body reviewTextAlign">
 							{{ business.name }}						
