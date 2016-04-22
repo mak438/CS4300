@@ -90,17 +90,17 @@
 			});
 
 			$(".morelink").click(function(){
-			if($(this).hasClass("less")) {
-				$(this).removeClass("less");
-				$(this).html(moretext);
-			} else {
-				$(this).addClass("less");
-				$(this).html(lesstext);
-			}
-			$(this).parent().prev().toggle();
-			$(this).prev().toggle();
-			return false;
-		});
+				if($(this).hasClass("less")) {
+					$(this).removeClass("less");
+					$(this).html(moretext);
+				} else {
+					$(this).addClass("less");
+					$(this).html(lesstext);
+				}
+				$(this).parent().prev().toggle();
+				$(this).prev().toggle();
+				return false;
+			});
 
 		});
 		
@@ -154,6 +154,7 @@
 	<div class="reviewDiv" >
 		<br>
 		<table width="750" align="center">
+			{% if reviews %}
 			{% for review in reviews %}
 			<tr>
 				<td >
@@ -168,12 +169,20 @@
 							{{ review.text }}						
 						</div>
 						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
-						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{ review.review_id }}&business_id={{review.business.business_id}}">See this Business</a>
+						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id }}&business_id={{review.business.business_id}}">See this Business</a>
 						<br><br>
 					</div>
 				</td>				
 			</tr>
 			{% endfor %}
+			{% else %}
+			<tr>
+				<td>
+					<p class="radioBtnGrp formColor"> Sorry, no results found for your query! &#x2639; </p>
+					<br>			
+				</td>
+			</tr>
+			{% endif %}
 		</table>
 	</div>
 </body>

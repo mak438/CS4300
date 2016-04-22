@@ -158,6 +158,7 @@
 		<br>
 
 		<table width="750" align="center">
+			{% if reviews %}
 			{% for review in reviews %}
 			<tr>
 				<td >
@@ -169,8 +170,8 @@
 							&nbsp;&nbsp;Under : {{review.business.categories}}
 						</div>
 						<div class="panel">
-						<span style="float:left"> &nbsp;&nbsp;Date: {{ review.date }}	</span>					<span style="float:right">
-						{% for val in review.stars %}
+							<span style="float:left"> &nbsp;&nbsp;Date: {{ review.date }}	</span>					<span style="float:right">
+							{% for val in review.stars %}
 							{% if val == True%}
 							<span class="rating">
 								<span>&#x2605;</span>
@@ -182,19 +183,28 @@
 							{% endif %}
 							{% endfor %}&nbsp;
 						</span>
-						</div>
-						<div class="more panel-body reviewTextAlign">
-							{{ review.text }}						
-						</div>
-						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
-						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}">See this Business</a>
-						<br><br>
 					</div>
+					<div class="more panel-body reviewTextAlign">
+						{{ review.text }}						
+					</div>
+					<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
+					<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}">See this Business</a>
+					<br><br>
 				</div>
-			</td>				
-		</tr>
-		{% endfor %}
-	</table>
+			</div>
+		</td>				
+	</tr>
+	{% endfor %}
+	{% else %}
+	<tr>
+		<td>
+			<p class="radioBtnGrp formColor"> Sorry, no results found for your query! &#x2639; </p>
+			<br>			
+		</td>
+	</tr>
+	{% endif %}
+
+</table>
 </div>
 </body>
 </html>
