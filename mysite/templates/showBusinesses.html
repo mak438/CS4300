@@ -183,7 +183,9 @@
 						</span>
 						</div>					
 						<a href="http://www.yelp.com/biz/{{business.url}}" class="more panel-body reviewTextAlign">
-							{{ business.name }}						
+							{% if forloop.first %}<span style="font-size: 150%; font-weight: bold;">{% endif %}
+                            {{ business.name }}						
+                            {% if forloop.first %}</span>{% endif %}
 						</a>
 						Categories : {{ business.categories}}
 						<!-- <a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
