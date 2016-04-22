@@ -22,11 +22,13 @@ with open(city + '.json') as reviews:
     reviews_list = json.load(reviews)
     for review in reviews_list:
         review_dict[review['review_id'].encode('utf-8')] = (review['text'].encode('utf-8'), review['business_id'].encode('utf-8'), review['stars'], review['date'].encode('utf-8'))
-        
-        for term in tokenize_regex.findall(review['text'].lower()):
-            categories[term.encode('utf-8')].append((review['review_id'].encode('utf-8'), 1.0))
-            terms_to_collect.add(term.encode('utf-8'))
-            businesses_to_collect.add(review['business_id'].encode('utf-8'))
+        terms = tokenize_regex.findall(review['text'].lower())
+        if terms:
+            review_weight = 1.0/len(terms)
+            for term in terms:
+                categories[term.encode('utf-8')].append((review['review_id'].encode('utf-8'), review_weight))
+                terms_to_collect.add(term.encode('utf-8'))
+                businesses_to_collect.add(review['business_id'].encode('utf-8'))
 
 s = shelve.Shelf(semidbm.open(city + '-Baseline.db', flag='n'), protocol=pickle.HIGHEST_PROTOCOL)
 for k,v in categories.items():

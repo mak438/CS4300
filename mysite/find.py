@@ -9,7 +9,7 @@ import re
 ReviewResult = namedtuple('ReviewResult', ['review_id', 'weight', 'text', 'date', 'stars', 'business'])
 BusinessResult = namedtuple('BusinessResult', ['business_id', 'url', 'name', 'categories', 'stars'])
 
-tokenize_regex = re.compile(r'[A-Za-z]+')
+tokenize_regex = re.compile(r'[a-z]+')
 
 def to_url(business_name, city):
     x = (''.join([c for c in business_name if 0 < ord(c) < 127])).replace('&', 'and').translate(None, string.punctuation).replace(' ', '-') + '-' + city.replace('-Baseline','')
@@ -46,7 +46,7 @@ class ReviewFinder:
 
     def find_reviews(self, keywords, limit=None):
         topics_by_weight = defaultdict(float)
-        for term in tokenize_regex.findall(keywords):
+        for term in tokenize_regex.findall(keywords.lower()):
             for topic, weight in self.__topic_list_for_term(term):
                 topics_by_weight[topic] += weight
         
