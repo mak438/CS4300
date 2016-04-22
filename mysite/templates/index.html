@@ -111,12 +111,11 @@
 
 		}
 
-		function showReviewsviaEnter(){
-
-
-			console.log("via enter")
-			window.location="/reviews?city="+cityName+"&keywords="+searchText;
-
+		function onEnter(){
+			if(event.charCode == 13){
+				//alert("Please click Go! to proceed");
+				return false;
+			}
 		}
 	</script>
 </head>
@@ -141,7 +140,7 @@
 	<form class="form-inline global-search" method='GET'>
 		<br><br>
 		<div class="form-group" width="1000px">
-			<input id="searchInput" type="text" class="form-control" placeholder="Your Input" onkeydown = "if (event.keyCode == 13)
+			<input id="searchInput" type="text" class="form-control" placeholder="Your Input" onkeypress="return onEnter()"
 			showReviewsviaEnter()">
 		</div>
 		<a id="submitBtn" class="btn btn-danger" onclick="showReviews()"> Go! </a>

@@ -128,6 +128,13 @@
 
 		}
 
+		function onEnter(){
+			if(event.charCode == 13){
+				//alert("Please click Go! to proceed");
+				return false;
+			}
+		}
+
 	</script>
 </head>
 
@@ -149,7 +156,7 @@
 		<br><br>
 
 		<div class="form-group">
-			<input id="searchInput" type="text" name="search" class="form-control" placeholder="Your Input">
+			<input id="searchInput" type="text" name="search" onkeypress="return onEnter()" class="form-control" placeholder="Your Input">
 		</div>
 		<a id="submitBtn" class="btn btn-danger" onclick="showReviews()"> Go! </a>
 	</form>
