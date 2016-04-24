@@ -111,6 +111,29 @@
 	</script>
 	<script type="text/javascript">
 
+
+		function myFunction(){
+		  var query = document.getElementById("searchInput");
+		  
+		  var previoussearch = "{{reviewtext}}";
+		  query.value = previoussearch;
+		  var highLight = previoussearch.split(" "),
+		  contents = document.getElementsByClassName("reviewpart");
+		  for (j=0;j<contents.length;j++){
+			  for( i = 0; i < highLight.length; i++ ){
+			  	contents[j] = contents[j].getElementsByClassName("more");
+			    contents[j].innerHTML = delimiter(contents[j].innerHTML, highLight[i]); 
+			  }
+			}
+		}
+
+		function delimiter(input, value) {
+		  return input.replace(new RegExp('(\\b)(' + value + ')(\\b)','ig'), '$1<b>$2</b>$3');
+		}
+
+
+		window.addEventListener("load",myFunction);
+
 		function showReviews(){
 			console.log("button clicked!");
 			var cities = document.getElementsByName('location');
@@ -173,29 +196,34 @@
 						<div align="left" class="panel-heading reviewHeader" >
 							Review : {{ forloop.counter }}  |  {{review.business.name}}
 						</div>
-						<div align="left" class="panel">
+						<div align="left" class="panel" style="margin-bottom: 0em">
 							&nbsp;&nbsp;Under : {{review.business.categories}}
 						</div>
 						<div class="panel">
-							<span style="float:left"> &nbsp;&nbsp;Date: {{ review.date }}	</span>					<span style="float:right">
-							{% for val in review.stars %}
-							{% if val == True%}
-							<span class="rating">
-								<span>&#x2605;</span>
+							<span style="float:left"> &nbsp;&nbsp;Date: {{ review.date }}	</span>					
+							<span style="float:right">
+								{% for val in review.stars %}
+								{% if val == True%}
+								<span class="rating">
+									<span>&#x2605;</span>
+								</span>
+								{% else %}
+								<span class="rating">
+									<span>&#x2606;</span>
+								</span>
+								{% endif %}
+								{% endfor %}&nbsp;
 							</span>
-							{% else %}
-							<span class="rating">
-								<span>&#x2606;</span>
-							</span>
-							{% endif %}
-							{% endfor %}&nbsp;
-						</span>
+						</div>
+					<!-- <div class="reviewpart"> -->
+					<div class="more reviewTextAlign reviewpart">
+					<!-- <p class="reviewtext"> -->
+						{{ review.text }}
+					<!-- </p> -->						
 					</div>
-					<div class="more panel-body reviewTextAlign">
-						{{ review.text }}						
-					</div>
-					<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
-					<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}">Show Similar Businesses</a>
+					<!-- </div> -->
+					<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}&reviewtext={{reviewtext}}">Find More Reviews</a>
+					<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}&reviewtext={{reviewtext}}">Show Similar Businesses</a>
 					<br><br>
 				</div>
 			</div>

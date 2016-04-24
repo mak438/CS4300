@@ -108,6 +108,32 @@
 	</script>
 	<script type="text/javascript">
 
+
+		function myFunction(){
+		  var query = document.getElementById("searchInput");
+		  
+		  var previoussearch = "{{reviewtext}}";
+		  query.value = previoussearch;
+		  
+		  
+		  var highLight = ['abcd', 'edge', 'rss feeds'],
+		      contents = document.body.innerHTML;
+
+		  for( i = 0; i < highLight.length; i++ ){
+		    contents = delimiter(contents, highLight[i]); 
+		  }
+
+		  document.body.innerHTML = contents;
+		}
+
+		function delimiter(input, value) {
+		  return input.replace(new RegExp('(\\b)(' + value + ')(\\b)','ig'), '$1<b>$2</b>$3');
+		}
+
+
+		window.addEventListener("load",myFunction);
+
+
 		function showReviews(){
 			console.log("button clicked!");
 			var cities = document.getElementsByName('location');
@@ -180,14 +206,17 @@
 							{% endif %}
 							{% endfor %}&nbsp;
 						</span>
-						</div>					
-						<a href="http://www.yelp.com/biz/{{business.url}}" class="more panel-body reviewTextAlign">
+						</div>		
+						<div class="panel-body text-center">
+						<p style="margin-bottom: 0px;">
+						<a href="http://www.yelp.com/biz/{{business.url}}" class="">
 							{% if forloop.first %}<span style="font-size: 150%; font-weight: bold;">{% endif %}
                             {{ business.name }}						
                             {% if forloop.first %}</span>{% endif %}
 						</a>
-						Categories : {{ business.categories}}
-						<!-- <a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
+						</p>
+						<p class="text-center">Categories : {{ business.categories}}</p>		
+						</div>				<!-- <a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
 						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{review.review_id}}">See this Business</a> -->
 						<!-- <br><br> -->
 					</div>
