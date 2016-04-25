@@ -3,11 +3,13 @@ import pickle
 import semidbm
 from collections import defaultdict, namedtuple
 from operator import itemgetter
+from itertools import groupby
 import string
 import re
 
 ReviewResult = namedtuple('ReviewResult', ['review_id', 'weight', 'text', 'date', 'stars', 'business'])
-BusinessResult = namedtuple('BusinessResult', ['business_id', 'url', 'name', 'categories', 'stars'])
+Business = namedtuple('Business', ['business_id', 'url', 'name', 'categories', 'stars'])
+BusinessResult = namedtuple('BusinessResult', ['business', 'pertinent_reviews'])
 
 tokenize_regex = re.compile(r'[a-z]+')
 
@@ -38,11 +40,11 @@ class ReviewFinder:
     def __review_result(self, review_id, weight):
         review = self.db["r=" + review_id]
         text, business_id, stars, date = review
-        return ReviewResult(review_id=review_id, weight=weight, text=text, stars=tuple([True] * stars + [False] * (5-stars)), date=date, business=self.__business_result(business_id))
+        return ReviewResult(review_id=review_id, weight=weight, text=text, stars=tuple([True] * stars + [False] * (5-stars)), date=date, business=self.__business(business_id))
     
-    def __business_result(self, business_id):
+    def __business(self, business_id):
         name, categories, stars = self.db["b=" + business_id]
-        return BusinessResult(business_id=business_id, url=to_url(name, self.city), name=name, categories=', '.join(categories), stars=tuple([True] * int(stars) + [False] * (5-int(stars))))
+        return Business(business_id=business_id, url=to_url(name, self.city), name=name, categories=', '.join(categories), stars=tuple([True] * int(stars) + [False] * (5-int(stars))))
 
     def find_reviews(self, keywords, limit=None):
         topics_by_weight = defaultdict(float)
@@ -67,5 +69,7 @@ class ReviewFinder:
         return [review for review in self.find_reviews(review_text, limit) if review.review_id != review_id]
         
     def find_businesses(self, review_id, business_id, limit=None):
-        this_business = self.__business_result(business_id)
-        return [this_business] + list(set([r.business for r in self.find_more(review_id, limit) if r.business.business_id!=business_id]))
+        this_business = self.__business(business_id)
+        
+        other_businesses = groupby([r for r in sorted(self.find_more(review_id, limit), key=itemgetter(5)) if r.business.business_id!=business_id], key=itemgetter(5))
+        return [BusinessResult(business=this_business, pertinent_reviews=[])] + [BusinessResult(business=a[0], pertinent_reviews=list(a[1])) for a in other_businesses]

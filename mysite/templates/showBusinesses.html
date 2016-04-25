@@ -192,7 +192,7 @@
 						<div align="left" class="panel-heading reviewHeader" >
 							Restaurant {{ forloop.counter }}
 							<span style="float:right">
-								{% for val in business.stars %}
+								{% for val in business.business.stars %}
 								{% if val == True%}
 								<span class="rating">
 									<span>&#x2605;</span>
@@ -209,14 +209,17 @@
 							<p style="margin-bottom: 0px;">
 								<a href="http://www.yelp.com/biz/{{business.url}}" class="">
 									{% if forloop.first %}<span style="font-size: 150%; font-weight: bold;">{% endif %}
-									{{ business.name }}						
+									{{ business.business.name }}						
 									{% if forloop.first %}</span>{% endif %}
 								</a>
 							</p>
-							<p class="text-center">Categories : {{ business.categories}}</p>		
+							<p class="text-center">Categories : {{ business.business.categories}}</p>		
 						</div>				<!-- <a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
 						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{review.review_id}}">See this Business</a> -->
 						<!-- <br><br> -->
+                        {% for review in business.pertinent_reviews %}
+                            <p>{{ review.text }}</p>
+                        {% endfor %}
 					</div>
 				</td>				
 			</tr>
