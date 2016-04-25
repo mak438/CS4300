@@ -57,7 +57,7 @@
 
 		$(document).ready(function() {
 
-			var cityName = null;
+			cityName = null;
 			var urlParams = window.location.search.substring(1).split('&');
 			for (var i=0; i<urlParams.length; i++){
 				var param = urlParams[i].split('=');
@@ -90,17 +90,17 @@
 			});
 
 			$(".morelink").click(function(){
-			if($(this).hasClass("less")) {
-				$(this).removeClass("less");
-				$(this).html(moretext);
-			} else {
-				$(this).addClass("less");
-				$(this).html(lesstext);
-			}
-			$(this).parent().prev().toggle();
-			$(this).prev().toggle();
-			return false;
-		});
+				if($(this).hasClass("less")) {
+					$(this).removeClass("less");
+					$(this).html(moretext);
+				} else {
+					$(this).addClass("less");
+					$(this).html(lesstext);
+				}
+				$(this).parent().prev().toggle();
+				$(this).prev().toggle();
+				return false;
+			});
 
 		});
 		
@@ -110,31 +110,29 @@
 
 
 		function myFunction(){
-		  var query = document.getElementById("searchInput");
-		  
-		  var previoussearch = "{{reviewtext}}";
-		  query.value = previoussearch;
-		  
-		  
-		  var highLight = ['abcd', 'edge', 'rss feeds'],
-		      contents = document.body.innerHTML;
-
-		  for( i = 0; i < highLight.length; i++ ){
-		    contents = delimiter(contents, highLight[i]); 
-		  }
-
-		  document.body.innerHTML = contents;
+			var query = document.getElementById("searchInput");
+			
+			var previoussearch = "{{reviewtext}}";
+			query.value = previoussearch;
+			var highLight = previoussearch.split(" "),
+			contents = document.getElementsByClassName("reviewpart");
+			for (j=0;j<contents.length;j++){
+				for( i = 0; i < highLight.length; i++ ){
+					contents[j] = contents[j].getElementsByClassName("more");
+					contents[j].innerHTML = delimiter(contents[j].innerHTML, highLight[i]); 
+				}
+			}
 		}
 
 		function delimiter(input, value) {
-		  return input.replace(new RegExp('(\\b)(' + value + ')(\\b)','ig'), '$1<b>$2</b>$3');
+			return input.replace(new RegExp('(\\b)(' + value + ')(\\b)','ig'), '$1<b>$2</b>$3');
 		}
-
 
 		window.addEventListener("load",myFunction);
 
 
 		function showReviews(){
+			debugger;
 			console.log("button clicked!");
 			var cities = document.getElementsByName('location');
 			for (var i = 0, length = cities.length; i < length; i++) {
@@ -187,35 +185,35 @@
 	<div class="reviewDiv" >
 		<br>
 		<table width="750" align="center">
-		{% for business in businesses %}
+			{% for business in businesses %}
 			<tr>
 				<td >
 					<div class="panel" align="center">
 						<div align="left" class="panel-heading reviewHeader" >
 							Restaurant {{ forloop.counter }}
-						<span style="float:right">
-						{% for val in business.stars %}
-							{% if val == True%}
-							<span class="rating">
-								<span>&#x2605;</span>
+							<span style="float:right">
+								{% for val in business.stars %}
+								{% if val == True%}
+								<span class="rating">
+									<span>&#x2605;</span>
+								</span>
+								{% else %}
+								<span class="rating">
+									<span>&#x2606;</span>
+								</span>
+								{% endif %}
+								{% endfor %}&nbsp;
 							</span>
-							{% else %}
-							<span class="rating">
-								<span>&#x2606;</span>
-							</span>
-							{% endif %}
-							{% endfor %}&nbsp;
-						</span>
 						</div>		
 						<div class="panel-body text-center">
-						<p style="margin-bottom: 0px;">
-						<a href="http://www.yelp.com/biz/{{business.url}}" class="">
-							{% if forloop.first %}<span style="font-size: 150%; font-weight: bold;">{% endif %}
-                            {{ business.name }}						
-                            {% if forloop.first %}</span>{% endif %}
-						</a>
-						</p>
-						<p class="text-center">Categories : {{ business.categories}}</p>		
+							<p style="margin-bottom: 0px;">
+								<a href="http://www.yelp.com/biz/{{business.url}}" class="">
+									{% if forloop.first %}<span style="font-size: 150%; font-weight: bold;">{% endif %}
+									{{ business.name }}						
+									{% if forloop.first %}</span>{% endif %}
+								</a>
+							</p>
+							<p class="text-center">Categories : {{ business.categories}}</p>		
 						</div>				<!-- <a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
 						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{review.review_id}}">See this Business</a> -->
 						<!-- <br><br> -->
