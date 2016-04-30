@@ -7,6 +7,8 @@ from itertools import groupby
 import string
 import re
 
+CATEGORY_WEIGHT = 2
+
 from stemming.porter2 import stem
 
 ReviewResult = namedtuple('ReviewResult', ['review_id', 'weight', 'text', 'date', 'stars', 'business'])
@@ -21,6 +23,16 @@ tokenize_regex = re.compile(r'[a-z]+')
 def to_url(business_name, city):
     x = (''.join([c for c in str(business_name) if 0 < ord(c) < 127])).replace('&', 'and').translate(None, string.punctuation).replace(' ', '-') + '-' + city.replace('-Baseline','')
     return x
+
+class ValueWithContributions:
+    def __init__(self):
+        self.value = 0.0
+        self.contribution = []
+    def add_contribution(self, value, contributor):
+        self.value += value;
+        self.contributions.append((value, contributor))
+        
+
 class ReviewFinder:
     def __init__(self, city):
         self.city = city
@@ -56,7 +68,8 @@ class ReviewFinder:
     
     def find_reviews(self, keywords, limit=None):
         topics_by_weight = defaultdict(float)
-        for term in tokenize_regex.findall(keywords.lower()):
+        terms = tokenize_regex.findall(keywords.lower())
+        for term in terms:
             term = stem(term)
             if term not in stopwords:
                 for topic, weight in self.__topic_list_for_term(term):
@@ -64,8 +77,10 @@ class ReviewFinder:
         
         reviews_by_weight = defaultdict(float)
         for topic, topic_weight in topics_by_weight.items():
-            for review, review_weight in self.__review_list_for_topic(str(topic)):
-                reviews_by_weight[review] += topic_weight * review_weight
+            for review, review_weight, categories in self.__review_list_for_topic(str(topic)):
+                print(terms)
+                print(categories)
+                reviews_by_weight[review] += (topic_weight * review_weight) * (1 + sum(1 for term in terms if term in categories)*CATEGORY_WEIGHT)
         
         reviews = sorted(reviews_by_weight.items(), key=itemgetter(1), reverse=True)
         if limit is not None:
