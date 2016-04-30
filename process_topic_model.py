@@ -65,4 +65,7 @@ print("Written terms")
 for r in reviews.itertuples():
     s["r=" + str(r.review_id)] = (r.text, r.business_id, r.stars, r.date)
 print("Written reviews")
+
+s["num_topics"] = NUM_TOPICS
+
 s.close()

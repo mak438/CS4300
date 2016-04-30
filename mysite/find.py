@@ -7,6 +7,8 @@ from itertools import groupby
 import string
 import re
 
+from stemming.porter2 import stem
+
 ReviewResult = namedtuple('ReviewResult', ['review_id', 'weight', 'text', 'date', 'stars', 'business'])
 Business = namedtuple('Business', ['business_id', 'url', 'name', 'categories', 'stars'])
 BusinessResult = namedtuple('BusinessResult', ['business', 'pertinent_reviews'])
@@ -48,10 +50,14 @@ class ReviewFinder:
     def __business(self, business_id):
         name, categories, stars = self.db["b=" + business_id]
         return Business(business_id=business_id, url=to_url(name, self.city), name=name, categories=', '.join(categories), stars=tuple([True] * int(stars) + [False] * (5-int(stars))))
-
+    
+    def num_topics(self):
+        return self.db["num_topics"]
+    
     def find_reviews(self, keywords, limit=None):
         topics_by_weight = defaultdict(float)
         for term in tokenize_regex.findall(keywords.lower()):
+            term = stem(term)
             if term not in stopwords:
                 for topic, weight in self.__topic_list_for_term(term):
                     topics_by_weight[topic] += weight
