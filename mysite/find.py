@@ -72,12 +72,15 @@ class ReviewFinder:
         return Business(business_id=business_id, url=to_url(name, self.city), name=name, categories=', '.join(categories), stars=tuple([True] * int(stars) + [False] * (5-int(stars))))
     
     def __top_terms(self, review_text, keywords):
+        
+        stem_to_terms = defaultdict(list)
         terms = defaultdict(int)
         for term in tokenize_regex.findall(review_text.lower()):
+            stem_to_terms[stem(term)].append(term)
             terms[stem(term)]+=1
         
         top_terms = sorted([(term, sum(similarity(self.__topic_list_for_term(term), self.__topic_list_for_term(stem(k))) for k in keywords)*count) for term, count in terms.items()], key=itemgetter(1))
-        return [t[0] for t in top_terms][:len(top_terms)/5]
+        return [stem_to_terms[t[0]] for t in top_terms][:len(top_terms)/5]
     
     def num_topics(self):
         return self.db["num_topics"]
