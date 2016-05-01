@@ -79,8 +79,9 @@ class ReviewFinder:
             stem_to_terms[stem(term)].append(term)
             terms[stem(term)]+=1
         
-        top_terms = sorted([(term, sum(similarity(self.__topic_list_for_term(term), self.__topic_list_for_term(stem(k))) for k in keywords)*count) for term, count in terms.items()], key=itemgetter(1))
-        return [stem_to_terms[t[0]] for t in top_terms][:len(top_terms)/5]
+        top_terms = sorted([(term, sum(similarity(self.__topic_list_for_term(term), self.__topic_list_for_term(stem(k))) for k in keywords)*count) for term, count in terms.items()], key=itemgetter(1), reverse=True)
+        all_terms = [stem_to_terms[t[0]] for t in top_terms][:len(top_terms)/5]
+        return list(set(sum(all_terms, [])))
     
     def num_topics(self):
         return self.db["num_topics"]

@@ -118,12 +118,21 @@
 	<script>
 
 
-		function myFunction(){
+		function highLightFunc(){
+			
+			//Show previous search text in the search box
 			var query = document.getElementById("searchInput");
-
 			var previoussearch = "{{reviewtext}}";
 			query.value = previoussearch;
-			var highLight = previoussearch.match(/[A-Za-z0-9]+/g),
+
+			//Highlight words similar to the search terms
+			//var highLight = previoussearch.match(/[A-Za-z0-9]+/g),
+			var p = document.getElementById("topicWords");
+			var topics = p.text;
+			console.log(topics)
+			var highLight = "{{top_terms}}";
+			console.log(highLight);
+
 			contents = document.getElementsByClassName("reviewpart");
 			for (j=0;j<contents.length;j++){
 				for( i = 0; i < highLight.length; i++ ){
@@ -140,7 +149,7 @@
 		}
 
 
-		window.addEventListener("load",myFunction);
+		window.addEventListener("load",highLightFunc);
 
 		function showReviews(){
 			console.log("button clicked!");
@@ -174,13 +183,13 @@
 	<h6 class="headerClass textColor">based on Yelp Reviews </h6>
 
 	<form action="" class="radioBtnGrp formColor">
-		<input type="radio" id="Las Vegas" name="location" value="Las Vegas">Las Vegas
-		<input type="radio" id="Phoenix"  name="location" value="Phoenix">Phoenix
-		<input type="radio" id="Pittsburgh"  name="location" value="Pittsburgh">Pittsburgh
+		<input type="radio" id="Las Vegas" name="location" value="Las Vegas" disabled>Las Vegas
+		<input type="radio" id="Phoenix"  name="location" value="Phoenix" disabled>Phoenix
+		<input type="radio" id="Pittsburgh"  name="location" value="Pittsburgh" disabled>Pittsburgh
 		<input type="radio" id="Urbana-Baseline" name="location" value="Urbana-Baseline">Urbana Baseline
 		<input type="radio" id="Urbana" name="location" value="Urbana">Urbana
-		<input type="radio" id="Scottsdale" name="location" value="Scottsdale">Scottsdale
-		<input type="radio" id="Charlotte" name="location" value="Charlotte">Charlotte
+		<input type="radio" id="Scottsdale" name="location" value="Scottsdale" disabled>Scottsdale
+		<input type="radio" id="Charlotte" name="location" value="Charlotte" disabled>Charlotte
 	</form>
 
 	<form class="form-inline global-search" method='GET'>
@@ -192,6 +201,9 @@
 		<a id="submitBtn" class="btn btn-danger" onclick="showReviews()"> Go! </a>
 	</form>
 	<br><br>
+
+	
+
 	<div class="reviewDiv" >
 		<br>
 
@@ -202,7 +214,7 @@
 				<td >
 					<div class="panel" align="center">
 						<div align="left" class="panel-heading reviewHeader" >
-							Review : {{ forloop.counter }}  |  {{review.business.name}}
+							Review : {{ forloop.counter }}  |  {{review.business.name}} 
 						</div>
 						<div align="left" class="panel" style="margin-bottom: 0em">
 							&nbsp;&nbsp;Under : {{review.business.categories}}
@@ -224,9 +236,39 @@
 							</span>
 						</div>
 						<!-- <div class="reviewpart"> -->
-						<div class="more reviewTextAlign reviewpart">
+						<div class="more reviewTextAlign">
 							<!-- <p class="reviewtext"> -->
-							{{ review.text }}
+							<p class="reviewpart"> </p>
+							<p id="reviewText" class="{{forloop.counter}}" hidden> {{ review.text }} </p>
+							<p id="topicWords" hidden> {{ review.top_terms }} </p>
+							<script>
+								var count = "{{forloop.counter}}"
+								var p = document.getElementById("topicWords");
+								var topics = p.innerHTML.match(/[A-Za-z]{2,}/g);
+
+								var p = document.getElementsByClassName(count);
+								var reviewText = p[0].innerHTML;
+
+								var contents = document.getElementsByClassName("reviewpart");
+								var content;
+								//get the last tag
+								for(var j=0 ;j< contents.length; j++){
+									content = contents[j];
+								}
+
+								content.innerHTML = reviewText;
+								for(var i = 0; i < topics.length; i++ ){
+									if(stopwords.indexOf(topics[i]) == -1)  {
+										content.innerHTML = delimiter(content.innerHTML, topics[i]);
+									}
+								}
+
+								function delimiter(input, value) {
+									return input.replace(new RegExp('(\\b)(' + value + ')(\\b)','ig'), '$1<b>$2</b>$3');
+								}
+
+							</script>
+
 							<!-- </p> -->						
 						</div>
 						<!-- </div> -->
