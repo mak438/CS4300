@@ -11,7 +11,7 @@ CATEGORY_WEIGHT = 0
 
 from stemming.porter2 import stem
 
-ReviewResult = namedtuple('ReviewResult', ['review_id', 'weight', 'text', 'date', 'stars', 'business', 'top_terms'])
+ReviewResult = namedtuple('ReviewResult', ['review_id', 'weight', 'text', 'date', 'stars', 'business', 'topics'])
 Business = namedtuple('Business', ['business_id', 'url', 'name', 'categories', 'stars'])
 BusinessResult = namedtuple('BusinessResult', ['business', 'pertinent_reviews'])
 
