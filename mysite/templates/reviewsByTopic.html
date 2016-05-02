@@ -151,9 +151,10 @@
 		function myFunction(){
 			var query = document.getElementById("searchInput");
 			
-			var previoussearch = "{{reviewtext}}";
-			query.value = previoussearch;
-			var highLight = previoussearch.split(" "),
+			//var previoussearch = "{{reviewtext}}";
+			//query.value = previoussearch;
+			//var highLight = previoussearch.split(" "),
+			
 			contents = document.getElementsByClassName("reviewpart");
 			for (j=0;j<contents.length;j++){
 				for( i = 0; i < highLight.length; i++ ){
@@ -210,23 +211,8 @@
 				}
 
 				$(this).attr('href','/reviews?city='+cityName+'&keywords='+$(this).text());
-			});
-		});
-
-		$(function(){
-			$('.topics_link').click(function(){
-				var cityName = "";
-				var cities = document.getElementsByName('location');
-				for (var i = 0, length = cities.length; i < length; i++) {
-					if (cities[i].checked) {
-						cityName = cities[i].value;
-						console.log(cityName);
-						break;
-					}
-				}
-
-				$(this).attr('href','/reviewsByTopic?city='+cityName+'&topic='+$(this).text());
-			});
+    // or alert($(this).hash();
+});
 		});
 
 	</script>
@@ -255,9 +241,6 @@
 		<a id="submitBtn" class="btn btn-danger" onclick="showReviews()"> Go! </a>
 	</form>
 	<br><br>
-
-	
-
 	<div class="reviewDiv" >
 		<br>
 
@@ -270,11 +253,7 @@
 						<div align="left" class="panel-heading reviewHeader" >
 							Review : {{ forloop.counter }}  |  {{review.business.name}} 
 						</div>
-						<!-- <div align="left" class="panel" style="margin-bottom: 0em">
-							&nbsp;&nbsp;Under : {{review.business.categories}}
-						</div> -->
 						<div class="panel">
-							<!-- <span style="float:left"> &nbsp;&nbsp;{{ review.date }}	</span>					 -->
 							<span style="float:left">&nbsp;&nbsp;Under : 
 								{% for c in review.business.categories %}
 								<a class="category_link" href="" >{{c}}</a>
@@ -294,66 +273,11 @@
 								{% endfor %}&nbsp;
 							</span>
 						</div>
-						<!-- <div class="reviewpart"> -->
+
 						<div class="more reviewTextAlign reviewpart">
 							{{ review.text }}
 						</div>
 
-						<!-- <div id="{{forloop.counter}}">
-
-					</div> -->
-
-					<!-- 	<script>
-
-							/*var div = d3.select("#{{forloop.counter}}").attr("class", "tooltip").style("opacity", 0.9).style("left", "10%").style(
-								"top", "10%");
-								*/
-								var count = "{{forloop.counter}}"
-								var div = document.getElementById(count);
-
-								div.html("{{t}}").style("font-color",
-									"#35978f");
-
-								</script> -->
-
-								
-
-
-								<!-- <p class="reviewtext"> -->
-							<!-- <p class="reviewpart"> </p>
-							<p id="reviewText" class="{{forloop.counter}}" hidden> {{ review.text }} </p>
-							<p id="topicWords" hidden> {{ review.top_terms }} </p>
-							<script>
-								var count = "{{forloop.counter}}"
-								var p = document.getElementById("topicWords");
-								var topics = p.innerHTML.match(/[A-Za-z]{2,}/g);
-
-								var p = document.getElementsByClassName(count);
-								var reviewText = p[0].innerHTML;
-
-								var contents = document.getElementsByClassName("reviewpart");
-								var content;
-								//get the last tag
-								for(var j=0 ;j< contents.length; j++){
-									content = contents[j];
-								}
-
-								content.innerHTML = reviewText;
-								for(var i = 0; i < topics.length; i++ ){
-									if(stopwords.indexOf(topics[i]) == -1)  {
-										content.innerHTML = delimiter(content.innerHTML, topics[i]);
-									}
-								}
-
-								function delimiter(input, value) {
-									return input.replace(new RegExp('(\\b)(' + value + ')(\\b)','ig'), '$1<b>$2</b>$3');
-								}
-
-							</script>
-						-->
-						<!-- </p> -->						
-						
-						<!-- </div> -->
 						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}&reviewtext={{reviewtext}}">Find More Reviews</a>
 						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}&reviewtext={{reviewtext}}">Show Similar Businesses</a>
 						<br><br>
@@ -361,7 +285,7 @@
 							{% for t,c in review.topics %}
 
 							<div style="display:inline;background-color:{{c}};margin:1px">
-								<a class="topics_link" href="">{{t}}</a>
+								<a class="category_link" href="">{{t}}</a>
 							</div>
 
 							{% endfor %}
