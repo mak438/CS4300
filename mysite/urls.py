@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^pt/', include('project_template.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^home', views.home, name='reviews'),
-    url(r'^showBusinesses',views.showBusinesses,name = 'showBusinesses')
+    url(r'^showBusinesses',views.showBusinesses,name = 'showBusinesses'),
+    url(r'^reviewsByTopic', views.reviewsByTopic, name='reviewsByTopic')
 ]

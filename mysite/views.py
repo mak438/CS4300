@@ -8,6 +8,11 @@ def reviews(request):
     f = ReviewFinder(city)
     return render_to_response('./reviews.html', {'city': city, 'reviews': f.find_reviews(str(request.GET.get('keywords')), 20), 'reviewtext': str(request.GET.get('keywords')) });
 
+def reviewsByTopic(request):
+    city = request.GET.get('city')
+    f = ReviewFinder(city)
+    return render_to_response('./reviewsByTopic', {'city': city, 'reviews': f.find_by_topic(str(request.GET.get('topic')), 20)})
+
 def moreReviews(request):
     city = request.GET.get('city')
     f = ReviewFinder(city)
