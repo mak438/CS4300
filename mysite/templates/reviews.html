@@ -234,11 +234,12 @@
 						<div align="left" class="panel-heading reviewHeader" >
 							Review : {{ forloop.counter }}  |  {{review.business.name}} 
 						</div>
-						<div align="left" class="panel" style="margin-bottom: 0em">
+						<!-- <div align="left" class="panel" style="margin-bottom: 0em">
 							&nbsp;&nbsp;Under : {{review.business.categories}}
-						</div>
+						</div> -->
 						<div class="panel">
-							<span style="float:left"> &nbsp;&nbsp;Date: {{ review.date }}	</span>					
+							<!-- <span style="float:left"> &nbsp;&nbsp;{{ review.date }}	</span>					 -->
+							<span style="float:left">&nbsp;&nbsp;Under : {{review.business.categories}}</span>
 							<span style="float:right">
 								{% for val in review.stars %}
 								{% if val == True%}
@@ -256,16 +257,6 @@
 						<!-- <div class="reviewpart"> -->
 						<div class="more reviewTextAlign reviewpart">
 							{{ review.text }}
-						</div>
-
-						<div>
-							{% for t in review.top_terms %}
-
-							<div style="display:inline;background-color:#ebccd1;margin:1px">
-								{{ t }}
-							</div>
-
-							{% endfor %}
 						</div>
 
 						<!-- <div id="{{forloop.counter}}">
@@ -326,6 +317,16 @@
 						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}&reviewtext={{reviewtext}}">Find More Reviews</a>
 						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}&reviewtext={{reviewtext}}">Show Similar Businesses</a>
 						<br><br>
+						<div>
+							{% for t in review.top_terms %}
+
+							<div style="display:inline;background-color:#ebccd1;margin:1px">
+								{{ t }}
+							</div>
+
+							{% endfor %}
+						</div>
+						<br>
 					</div>
 				</div>
 			</td>				

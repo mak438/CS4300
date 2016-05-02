@@ -226,6 +226,18 @@
 						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}&reviewtext={{reviewtext}}">Find More Reviews</a>
 						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}&reviewtext={{reviewtext}}">Show Similar Businesses</a>
 						<br><br>
+
+						<div>
+							{% for t in review.top_terms %}
+
+							<div style="display:inline;background-color:#ebccd1;margin:1px">
+								{{ t }}
+							</div>
+
+							{% endfor %}
+						</div>
+						<br>
+
 					</div>
 				</td>				
 			</tr>
