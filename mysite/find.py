@@ -7,7 +7,7 @@ from itertools import groupby
 import string
 import re
 
-CATEGORY_WEIGHT = 2
+CATEGORY_WEIGHT = 0
 
 from stemming.porter2 import stem
 
