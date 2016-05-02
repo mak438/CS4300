@@ -51,6 +51,11 @@
 			border-color: #ebccd1;
 			background-color: #d9534f;
 		}
+		.selectedreviewHeader{
+			border-color: #ebccd1;
+			background-color: #337ab7;
+		}
+
 	</style>
 	<script type="text/javascript">
 		
@@ -158,6 +163,22 @@
 			}
 		}
 
+		$(function(){
+			$('.category_link').click(function(){
+				var cityName = "";
+				var cities = document.getElementsByName('location');
+				for (var i = 0, length = cities.length; i < length; i++) {
+					if (cities[i].checked) {
+						cityName = cities[i].value;
+						console.log(cityName);
+						break;
+					}
+				}
+
+				$(this).attr('href','/reviews?city='+cityName+'&keywords='+$(this).text());
+    // or alert($(this).hash();
+});
+		});
 	</script>
 </head>
 
@@ -192,15 +213,30 @@
 			<tr>
 				<td >
 					<div class="panel" align="center">
-						<div align="left" class="panel-heading reviewHeader" >
-							Review : {{ forloop.counter }}  |  {{review.business.name}}
+						
+						{% if forloop.counter == 1 %}
+						<div align="left" class="panel-heading selectedreviewHeader" >
+							{% if forloop.first %}<span style="font-size: 150%; font-weight: bold;">{% endif %}
+									SELECTED REVIEW  |  {{review.business.name}}
+							{% if forloop.first %}</span>{% endif %}
 						</div>
+						{% else %}
+						<div align="left" class="panel-heading reviewHeader" >
+								Review : {{ forloop.counter|add:"-1"}}  |  {{review.business.name}}
+						</div>
+						{% endif %}
+							
+						
 						<!-- <div align="left" class="panel" style="margin-bottom: 0em">
 							&nbsp;&nbsp;Under : {{review.business.categories}}
 						</div> -->
 						<div class="panel">
 							<!-- <span style="float:left"> &nbsp;&nbsp;{{ review.date }}	</span>					 -->
-							<span style="float:left">&nbsp;&nbsp;Under : {{review.business.categories}}</span>
+							<span style="float:left">&nbsp;&nbsp;Under : 
+								{% for c in review.business.categories %}
+								<a class="category_link" href="" >{{c}}</a>
+								{% endfor %}
+							</span>
 							<span style="float:right">
 								{% for val in review.stars %}
 								{% if val == True%}
@@ -220,18 +256,24 @@
 						<div class="more reviewTextAlign reviewpart">
 							<!-- <p class="reviewtext"> -->
 							{{ review.text }}
-							<!-- </p> -->						
+							<!-- </p> -->				
 						</div>
 						<!-- </div> -->
-						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}&reviewtext={{reviewtext}}">Find More Reviews</a>
-						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}&reviewtext={{reviewtext}}">Show Similar Businesses</a>
-						<br><br>
+						{% if forloop.first %}
+							<a class="btn btn-primary" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}&reviewtext={{reviewtext}}">Find More Reviews</a>
+							<a class="btn btn-primary" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}&reviewtext={{reviewtext}}">Show Similar Businesses</a>
+							<br><br>
+						{% else %}
+							<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}&reviewtext={{reviewtext}}">Find More Reviews</a>
+							<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}&reviewtext={{reviewtext}}">Show Similar Businesses</a>
+							<br><br>
+						{% endif %}
 
 						<div>
-							{% for t in review.top_terms %}
+							{% for t in review.topics %}
 
 							<div style="display:inline;background-color:#ebccd1;margin:1px">
-								{{ t }}
+								<a class="category_link" href="">{{t}}</a>
 							</div>
 
 							{% endfor %}
