@@ -340,9 +340,9 @@
 						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}&reviewtext={{reviewtext}}">Show Similar Businesses</a>
 						<br><br>
 						<div>
-							{% for t in review.topics %}
+							{% for t,c in review.topics %}
 
-							<div style="display:inline;background-color:#ebccd1;margin:1px">
+							<div style="display:inline;background-color:{{c}};margin:1px">
 								<a class="category_link" href="">{{t}}</a>
 							</div>
 
