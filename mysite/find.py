@@ -72,7 +72,13 @@ class ReviewFinder:
                     score, text, business_id, stars = review_results[review]
                     review_results[review] = ((score + weight * stars) / weight_for_term, text, business_id, stars)
         reviews = sorted(review_results.items(), key=lambda (review, props): props[0], reverse=True)
-        return [ReviewResult(review_id=review_id, weight=props[0], text=props[1], stars=tuple([True] * props[3] + [False] * (5-props[3])), business=self.__business(props[2]), topics=sorted(self.db["rt=" + review_id], key=itemgetter(1), reverse=True)[:5] for review_id, props in review_results.items()]
+        
+        return [ReviewResult(review_id=review_id,
+                             weight=props[0],
+                             text=props[1],
+                             stars=tuple([True] * props[3] + [False] * (5-props[3])),
+                             business=self.__business(props[2]),
+                             topics=[entry for entry, score in sorted(self.db["rt=" + review_id], key=itemgetter(1), reverse=True)[:5]]) for review_id, props in review_results.items()]
     
     def find_more(self, review_id, limit=None):
         review_text = self.db["r=" + review_id][0]
