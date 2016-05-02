@@ -7,11 +7,7 @@ from itertools import groupby
 import string
 import re
 
-CATEGORY_WEIGHT = 0
-
-from stemming.porter2 import stem
-
-ReviewResult = namedtuple('ReviewResult', ['review_id', 'weight', 'text', 'date', 'stars', 'business', 'topics'])
+ReviewResult = namedtuple('ReviewResult', ['review_id', 'weight', 'text', 'stars', 'business'])
 Business = namedtuple('Business', ['business_id', 'url', 'name', 'categories', 'stars'])
 BusinessResult = namedtuple('BusinessResult', ['business', 'pertinent_reviews'])
 
@@ -21,25 +17,15 @@ stopwords = set(['a', 'able', 'about', 'above', 'according', 'accordingly', 'acr
 tokenize_regex = re.compile(r'[a-z]+')
 
 def to_url(business_name, city):
-    x = (''.join([c for c in str(business_name) if 0 < ord(c) < 127])).replace('&', 'and').translate(None, string.punctuation).replace(' ', '-') + '-' + city.replace('-Baseline','')
+    x = (''.join([c for c in business_name.encode('utf-8') if 0 < ord(c) < 127])).replace('&', 'and').translate(None, string.punctuation).replace(' ', '-') + '-' + city.replace('-Baseline','')
     return x
 
-class SimilarityStep:
-    def __init__(self):
-        self.left_value = 0
-        self.right_value = 0
-
-def similarity(left, right):
-    similarity_values = defaultdict(SimilarityStep)
-    for topic, proportion in left:
-        similarity_values[topic].left_value = proportion
-    for topic, proportion in right:
-        similarity_values[topic].rightvalue = proportion
-    
-    result = sum(s.left_value * s.right_value for s in similarity_values.values())
-    if result > 0:
-        result /= (sum(s.left_value for s in similarity_values.values()) * sum(s.left_value for s in similarity_values.values()))
-    return result;
+weight_by_star = [0, # Should be no zero star ratings
+                  0.5, # 1 star ratings, omit when possible
+                  0.85, # 2 star ratings, should still be unlikely
+                  1, # 3 star ratings, don't bias
+                  1.2, # 4 star ratings, want to keep
+                  1.5] # 5 star ratings are the best
 
 class ReviewFinder:
     def __init__(self, city):
@@ -50,7 +36,7 @@ class ReviewFinder:
     def __del__(self):
         self.f.close()
     
-    def __topic_list_for_term(self, term):
+    def __review_list_for_term(self, term):
         try:
             return self.db["t=" + term]
         except KeyError:
@@ -62,52 +48,24 @@ class ReviewFinder:
         except KeyError:
             return []
     
-    def __review_result(self, review_id, weight, keywords):
-        review = self.db["r=" + review_id]
-        text, business_id, stars, date = review
-        dt = date.split(" ")[0]
-        return ReviewResult(review_id=review_id, weight=weight, text=text, stars=tuple([True] * stars + [False] * (5-stars)), date=dt, business=self.__business(business_id), top_terms=self.__top_terms(text, keywords))
-    
     def __business(self, business_id):
         name, categories, stars = self.db["b=" + business_id]
         return Business(business_id=business_id, url=to_url(name, self.city), name=name, categories=', '.join(categories), stars=tuple([True] * int(stars) + [False] * (5-int(stars))))
-    
-    def __top_terms(self, review_text, keywords):
-        
-        stem_to_terms = defaultdict(list)
-        terms = defaultdict(int)
-        for term in tokenize_regex.findall(review_text.lower()):
-            stem_to_terms[stem(term)].append(term)
-            terms[stem(term)]+=1
-        
-        top_terms = sorted([(term, sum(similarity(self.__topic_list_for_term(term), self.__topic_list_for_term(stem(k))) for k in keywords)*count) for term, count in terms.items()], key=itemgetter(1), reverse=True)
-        all_terms = [stem_to_terms[t[0]] for t in top_terms][:len(top_terms)/5]
-        return list(set(sum(all_terms, [])))
-    
-    def num_topics(self):
-        return self.db["num_topics"]
-    
+
     def find_reviews(self, keywords, limit=None):
-        topics_by_weight = defaultdict(float)
-        terms = tokenize_regex.findall(keywords.lower())
-        for term in terms:
-            term = stem(term)
+        
+        review_results = {}
+        
+        for term in tokenize_regex.findall(keywords.lower()):
             if term not in stopwords:
-                for topic, weight in self.__topic_list_for_term(term):
-                    topics_by_weight[topic] += weight
-        
-        reviews_by_weight = defaultdict(float)
-        for topic, topic_weight in topics_by_weight.items():
-            for review, review_weight, categories in self.__review_list_for_topic(str(topic)):
-                print(terms)
-                print(categories)
-                reviews_by_weight[review] += (topic_weight * review_weight) * (1 + sum(1 for term in terms if term in categories)*CATEGORY_WEIGHT)
-        
-        reviews = sorted(reviews_by_weight.items(), key=itemgetter(1), reverse=True)
-        if limit is not None:
-            reviews = reviews[:limit]
-        
-        return [self.__review_result(r[0], r[1], terms) for r in reviews]
+                for review, weight in self.__review_list_for_term(term):
+                    if review not in review_results:
+                        text, business_id, stars = self.db["r=" + review]
+                        review_results[review] = (0.0, text, business_id, stars)
+                    score, text, business_id, stars = review_results[review]
+                    review_results[review] = (score + weight * stars, text, business_id, stars)
+        reviews = sorted(review_results.items(), key=lambda (review, props): props[0], reverse=True)
+        return [ReviewResult(review_id=review_id, weight=props[0], text=props[1], stars=tuple([True] * props[3] + [False] * (5-props[3])), business=self.__business(props[2])) for review_id, props in review_results.items()]
     
     def find_more(self, review_id, limit=None):
         review_text = self.db["r=" + review_id][0]
