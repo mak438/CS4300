@@ -61,8 +61,8 @@ class ReviewFinder:
     def __top_topics(self, review_id):
         results = []
         for topic, score in sorted(self.db["rt=" + review_id], key=itemgetter(1), reverse=True):
-            _, topic_description = self.db["c=" + str(topic)]
-            results.append(topic_description)
+            _, (name, color) = self.db["c=" + str(topic)]
+            results.append((topic, name, color))
         return results
         
     def find_reviews(self, keywords, limit=None):
@@ -94,7 +94,7 @@ class ReviewFinder:
         this_text, this_business_id, this_stars = self.db["r=" + review_id]
         
         for topic, topic_weight in self.db["rt=" + review_id]:
-            for review, review_weight in self.db["c=" + str(topic)]:
+            for review, review_weight in self.db["c=" + str(topic)][0]:
                 if review not in review_results:
                     text, business_id, stars = self.db["r=" + review]
                     review_results[review] = (0.0, text, business_id, stars)
