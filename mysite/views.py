@@ -17,6 +17,6 @@ def home(request):
     return render_to_response('./index.html');
 
 def showBusinesses(request):
-	city = request.GET.get('city')
-	f = ReviewFinder(city)
-	return render_to_response('./showBusinesses.html',{'city':city, 'businesses': f.find_businesses(str(request.GET.get('review_id')),str(request.GET.get('business_id')),20), 'reviewtext': str(request.GET.get('reviewtext'))})
+    city = request.GET.get('city')
+    f = ReviewFinder(city)
+    return render_to_response('./showBusinesses.html',{'city':city, 'businesses': f.find_businesses(str(request.GET.get('review_id')),str(request.GET.get('business_id')),20), 'reviewtext': str(request.GET.get('reviewtext'))})
