@@ -59,8 +59,12 @@ class ReviewFinder:
         return Business(business_id=business_id, url=to_url(name, self.city), name=name, categories=categories, stars=tuple([True] * int(stars) + [False] * (5-int(stars))))
     
     def __top_topics(self, review_id):
-        return [entry for entry, score in sorted(self.db["rt=" + review_id], key=itemgetter(1), reverse=True)]
-    
+        results = []
+        for topic, score in sorted(self.db["rt=" + review_id], key=itemgetter(1), reverse=True):
+            _, topic_description = self.db["c=" + str(topic)]
+            results.append(topic_description)
+        return results
+        
     def find_reviews(self, keywords, limit=None):
         
         review_results = {}

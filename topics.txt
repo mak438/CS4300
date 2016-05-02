@@ -34,7 +34,7 @@
 33-Lunch-#CCCC00
 34-Pleasant-#33CC66
 35-Vegan-#b3de69
-36-Regular visit-#FF9966	
+36-Regular visit-#FF9966
 37-Long waits-#CC99FF
 38-Meat-#CC3300
 39-Bar-#7bccc4
