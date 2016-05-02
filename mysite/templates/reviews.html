@@ -3,6 +3,7 @@
 <head>
 	<link rel="stylesheet" href="../static/bootstrap.min.css">
 	<link rel="stylesheet" href="../static/main.css">
+	<script src="http://d3js.org/d3.v3.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 
 	<style type="text/css">
@@ -144,23 +145,40 @@
 			}
 		}
 
-		function delimiter(input, value) {
-			return input.replace(new RegExp('(\\b)(' + value + ')(\\b)','ig'), '$1<b>$2</b>$3');
-		}
-
-
-		window.addEventListener("load",highLightFunc);
-
-		function showReviews(){
-			console.log("button clicked!");
-			var cities = document.getElementsByName('location');
-			for (var i = 0, length = cities.length; i < length; i++) {
-				if (cities[i].checked) {
-					cityName = cities[i].value;
-					console.log(cityName);
-					break;
+		function myFunction(){
+			var query = document.getElementById("searchInput");
+			
+			var previoussearch = "{{reviewtext}}";
+			query.value = previoussearch;
+			var highLight = previoussearch.split(" "),
+			contents = document.getElementsByClassName("reviewpart");
+			for (j=0;j<contents.length;j++){
+				for( i = 0; i < highLight.length; i++ ){
+					if(stopwords.indexOf(highLight[i]) == -1)  {
+					//contents[j] = contents[j].getElementsByClassName("more");
+					contents[j].innerHTML = delimiter(contents[j].innerHTML, highLight[i]); 
 				}
 			}
+		}
+	}
+
+	function delimiter(input, value) {
+		return input.replace(new RegExp('(\\b)(' + value + ')(\\b)','ig'), '$1<b>$2</b>$3');
+	}
+
+
+	window.addEventListener("load",myFunction);
+
+	function showReviews(){
+		console.log("button clicked!");
+		var cities = document.getElementsByName('location');
+		for (var i = 0, length = cities.length; i < length; i++) {
+			if (cities[i].checked) {
+				cityName = cities[i].value;
+				console.log(cityName);
+				break;
+			}
+		}
 			//Get the input keywords
 			searchText = document.getElementById("searchInput").value;
 			console.log(searchText);
@@ -236,9 +254,42 @@
 							</span>
 						</div>
 						<!-- <div class="reviewpart"> -->
-						<div class="more reviewTextAlign">
-							<!-- <p class="reviewtext"> -->
-							<p class="reviewpart"> </p>
+						<div class="more reviewTextAlign reviewpart">
+							{{ review.text }}
+						</div>
+
+						<div>
+							{% for t in review.top_terms %}
+
+							<div style="display:inline;background-color:#ebccd1;margin:1px">
+								{{ t }}
+							</div>
+
+							{% endfor %}
+						</div>
+
+						<!-- <div id="{{forloop.counter}}">
+
+					</div> -->
+
+					<!-- 	<script>
+
+							/*var div = d3.select("#{{forloop.counter}}").attr("class", "tooltip").style("opacity", 0.9).style("left", "10%").style(
+								"top", "10%");
+								*/
+								var count = "{{forloop.counter}}"
+								var div = document.getElementById(count);
+
+								div.html("{{t}}").style("font-color",
+									"#35978f");
+
+								</script> -->
+
+								
+
+
+								<!-- <p class="reviewtext"> -->
+							<!-- <p class="reviewpart"> </p>
 							<p id="reviewText" class="{{forloop.counter}}" hidden> {{ review.text }} </p>
 							<p id="topicWords" hidden> {{ review.top_terms }} </p>
 							<script>
@@ -268,9 +319,9 @@
 								}
 
 							</script>
-
-							<!-- </p> -->						
-						</div>
+						-->
+						<!-- </p> -->						
+						
 						<!-- </div> -->
 						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}&reviewtext={{reviewtext}}">Find More Reviews</a>
 						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}&reviewtext={{reviewtext}}">Show Similar Businesses</a>
