@@ -178,6 +178,22 @@
     // or alert($(this).hash();
 });
 		});
+
+		$(function(){
+			$('.topics_link').click(function(){
+				var cityName = "";
+				var cities = document.getElementsByName('location');
+				for (var i = 0, length = cities.length; i < length; i++) {
+					if (cities[i].checked) {
+						cityName = cities[i].value;
+						console.log(cityName);
+						break;
+					}
+				}
+
+				$(this).attr('href','/reviewsByTopic?city='+cityName+'&topic='+$(this).attr('data'));
+			});
+		});
 	</script>
 </head>
 
