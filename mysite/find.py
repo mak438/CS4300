@@ -64,7 +64,8 @@ class ReviewFinder:
         results = []
         for topic, score in sorted(self.db["rt=" + review_id], key=itemgetter(1), reverse=True):
             _, (name, color) = self.db["c=" + str(topic)]
-            results.append((topic, name, color))
+            if name != 'zzz':
+              results.append((topic, name, color))
         return results
         
     def all_topics(self):
