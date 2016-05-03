@@ -55,7 +55,7 @@
 		.rating {
 			width:3em;
 		}
-		.topics{
+		.topics_link{
 			color: black;
 		}
 	</style>
@@ -360,7 +360,7 @@
 						<div>
 							{% for tid,tname,tcolor in review.topics %}
 
-							<div style="display:inline;background-color:{{tcolor}};margin:1px">
+							<div style="display:inline;background-color:{{tcolor}};margin:2px">
 								<a class="topics_link" href="" data={{tid}}>{{tname}}</a>
 							</div>
 

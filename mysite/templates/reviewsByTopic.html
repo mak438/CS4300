@@ -82,76 +82,13 @@
 
 			document.getElementById(cityName).checked = true;
 
-			/*var showChar = 500;
-			var ellipsestext = "...";
-			var moretext = "Show More";
-			var lesstext = "Show Less";
-			$('.more').each(function() {
-				var content = $(this).html();
-				if(content.length > showChar) {
-
-					var c = content.substr(0, showChar-1);
-					var h = content.substr(showChar-1, content.length - showChar);
-
-					var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
-
-					$(this).html(html);
-				}
-
-			});
-			
-			$(".morelink").click(function(){
-				debugger;
-				//console.log("clicked on more");
-				if($(this).hasClass("less")) {
-					$(this).removeClass("less");
-					$(this).html(moretext);
-				} else {
-					$(this).addClass("less");
-					$(this).html(lesstext);
-				}
-				$(this).parent().prev().toggle();
-				$(this).prev().toggle();
-				return false;
-			});*/
-
-		});
 		
-
-	</script>
-	<script>
-
-
-		function highLightFunc(){
-			
-			//Show previous search text in the search box
-			var query = document.getElementById("searchInput");
-			var previoussearch = "{{reviewtext}}";
-			query.value = previoussearch;
-
-			//Highlight words similar to the search terms
-			//var highLight = previoussearch.match(/[A-Za-z0-9]+/g),
-			var p = document.getElementById("topicWords");
-			var topics = p.text;
-			console.log(topics)
-			var highLight = "{{top_terms}}";
-			console.log(highLight);
-
-			contents = document.getElementsByClassName("reviewpart");
-			for (j=0;j<contents.length;j++){
-				for( i = 0; i < highLight.length; i++ ){
-					if(stopwords.indexOf(highLight[i]) == -1)  {
-						//contents[j] = contents[j].getElementsByClassName("reviewpart");
-						contents[j].innerHTML = delimiter(contents[j].innerHTML, highLight[i]); 
-					}
-				}
-			}
-		}
+		});
 
 		function myFunction(){
 			var query = document.getElementById("searchInput");
-			
-			var previoussearch = "{{reviewtext}}";
+			debugger;
+			var previoussearch = "{{topic}}";
 			query.value = previoussearch;
 			var highLight = previoussearch.split(" "),
 			contents = document.getElementsByClassName("reviewpart");
@@ -196,7 +133,6 @@
 			}
 		}
 
-
 		$(function(){
 			$('.category_link').click(function(){
 				var cityName = "";
@@ -209,9 +145,24 @@
 					}
 				}
 
-				$(this).attr('href','/reviewsByTopics?city='+cityName+'&topic='+$(this).attr('data'));
-    // or alert($(this).hash();
-});
+				$(this).attr('href','/reviews?city='+cityName+'&keywords='+$(this).text());
+			});
+		});
+
+		$(function(){
+			$('.topics_link').click(function(){
+				var cityName = "";
+				var cities = document.getElementsByName('location');
+				for (var i = 0, length = cities.length; i < length; i++) {
+					if (cities[i].checked) {
+						cityName = cities[i].value;
+						console.log(cityName);
+						break;
+					}
+				}
+
+				$(this).attr('href','/reviewsByTopic?city='+cityName+'&topic='+$(this).attr('data'));
+			});
 		});
 
 	</script>
@@ -284,15 +235,15 @@
 							{{ review.text }}
 						</div>
 
-				
+
 						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}&reviewtext={{reviewtext}}">Find More Reviews</a>
 						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}&reviewtext={{reviewtext}}">Show Similar Businesses</a>
 						<br><br>
 						<div>
-							{% for i,t,c in review.topics %}
+							{% for tid,tname,tcolor in review.topics %}
 
-							<div style="display:inline;background-color:{{c}};margin:1px">
-								<a class="category_link" href="" data={{i}}>{{t}}</a>
+							<div style="display:inline;background-color:{{tcolor}};margin:1px">
+								<a class="topics_link" href="" data={{tid}}>{{tname}}</a>
 							</div>
 
 							{% endfor %}

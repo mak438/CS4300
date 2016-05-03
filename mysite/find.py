@@ -148,3 +148,7 @@ class ReviewFinder:
         
         other_businesses = groupby([r for r in sorted(self.find_more(review_id, limit), key=itemgetter(4)) if r.business.business_id!=business_id], key=itemgetter(4))
         return [BusinessResult(business=this_business, pertinent_reviews=[])] + [BusinessResult(business=a[0], pertinent_reviews=list(a[1])) for a in other_businesses]
+
+    def topic_name_by_id(self, topic_id):
+      _, (name, color) = self.db["c=" + str(topic_id)]
+      return name

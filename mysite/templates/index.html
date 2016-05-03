@@ -57,6 +57,15 @@
 			border-color: #ebccd1;
 			background-color: #d9534f;
 		}
+		.topics_link{
+			color: white;
+			font-size: 20pt;
+			margin: 0 auto;
+			padding: 5px;
+			width: 50%;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
 	</style>
 	<script>
 		$(document).ready(function() {
@@ -117,15 +126,28 @@
 				return false;
 			}
 		}
+
+		$(function(){
+			$('.topics_link').click(function(){
+				var cityName = "";
+				var cities = document.getElementsByName('location');
+				for (var i = 0, length = cities.length; i < length; i++) {
+					if (cities[i].checked) {
+						cityName = cities[i].value;
+						console.log(cityName);
+						break;
+					}
+				}
+
+				$(this).attr('href','/reviewsByTopic?city='+cityName+'&topic='+$(this).attr('data'));
+			});
+		});
 	</script>
 </head>
 
 <body background="../static/bg.jpg">     
-	<br>
-	<br>   
 	<h3 class="headerClass textColor">Restaurant Recommendations System</h3>
 	<h6 class="subHeaderClass textColor">based on Yelp Reviews </h6>
-	<br>
 	<form action="" class="radioBtnGrp formColor">
 		<input type="radio" name="location" value="Las Vegas" disabled>Las Vegas
 		<input type="radio" name="location" value="Phoenix" disabled>Phoenix
@@ -135,50 +157,25 @@
 		<input type="radio" name="location" value="Scottsdale" disabled>Scottsdale
 		<input type="radio" name="location" value="Charlotte" disabled>Charlotte
 	</form>
-	<br>
-	<br>
 	<form class="form-inline global-search" method='GET'>
-		<br><br>
+		<br>
+		<br>
 		<div class="form-group" width="1000px">
 			<input id="searchInput" type="text" class="form-control" placeholder="Your Input" onkeypress="return onEnter()"
 			>
 		</div>
 		<a id="submitBtn" class="btn btn-danger" onclick="showReviews()"> Go! </a>
 	</form>
-                        <div>
-                            {% for tid,tname,tcolor in topics %}
+	<br>
+	<br>
+	<div style="width:50%;text-align: center;margin:0 auto;">
+		{% for tid,tname,tcolor in topics %}
 
-                            <div style="display:inline;background-color:{{tcolor}};margin:1px">
-                                <a class="topics_link" href="" data={{tid}}>{{tname}}</a>
-                            </div>
+		<div style="text-align:center;display:inline;padding-top: 8px;">
+			<a class="topics_link" href="" data={{tid}}>{{tname}}</a>
+		</div>
 
-                            {% endfor %}
-                        </div>
-
-
-	
-
-	<!-- <div class="reviewDiv tableVisibility" >
-		<br>
-		<table width="750" align="center">
-			{% for review in reviews %}
-			<tr>
-				<td >
-					<div class="panel" align="center">
-						<div align="left" class="panel-heading reviewHeader" >
-							Review: {{ forloop.counter }}
-						</div>
-						<div class="more panel-body reviewTextAlign">
-							{{ review.text }}						
-						</div>
-						<a class="btn btn-danger" align="center" href="/moreReviews/city={{ city }}&review_id={{ review.review_id }}" >Find more Reviews</a>
-						<a class="btn btn-danger" align="center" href="/showBusinesuses/city={{ city }}&business_id={{review.business_id}}">Show Similar Businesses</a>
-						<br><br>
-					</div>
-				</td>				
-			</tr>
-			{% endfor %}
-		</table>
-	</div> -->
+		{% endfor %}
+	</div>
 </body>
 </html>
