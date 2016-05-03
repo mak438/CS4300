@@ -7,7 +7,7 @@ from itertools import groupby
 import string
 import re
 
-ReviewResult = namedtuple('ReviewResult', ['review_id', 'weight', 'text', 'stars', 'business', 'topics'])
+ReviewResult = namedtuple('ReviewResult', ['review_id', 'weight', 'text', 'date', 'stars', 'business'])
 Business = namedtuple('Business', ['business_id', 'url', 'name', 'categories', 'stars'])
 BusinessResult = namedtuple('BusinessResult', ['business', 'pertinent_reviews'])
 
@@ -17,19 +17,9 @@ stopwords = set(['a', 'able', 'about', 'above', 'according', 'accordingly', 'acr
 tokenize_regex = re.compile(r'[a-z]+')
 
 def to_url(business_name, city):
-    x = (''.join([c for c in business_name.encode('utf-8') if 0 < ord(c) < 127])).replace('&', 'and').translate(None, string.punctuation).replace(' ', '-') + '-' + city.replace('-Baseline','')
+    x = (''.join([c for c in str(business_name) if 0 < ord(c) < 127])).replace('&', 'and').translate(None, string.punctuation).replace(' ', '-') + '-' + city.replace('-Baseline','')
     return x
-
-weight_by_star = [0, # Should be no zero star ratings
-                  0.5, # 1 star ratings, omit when possible
-                  0.85, # 2 star ratings, should still be unlikely
-                  1, # 3 star ratings, don't bias
-                  1.2, # 4 star ratings, want to keep
-                  1.5] # 5 star ratings are the best
-
-CATEGORIES_WEIGHT = 1
-
-class ReviewFinder:
+class ReviewFinderBaseline:
     def __init__(self, city):
         self.city = city
         self.f = semidbm.open(city + '.db', flag='r')
@@ -38,15 +28,9 @@ class ReviewFinder:
     def __del__(self):
         self.f.close()
     
-    def __review_list_for_term(self, term):
+    def __topic_list_for_term(self, term):
         try:
-            return self.db["t=" + term][0]
-        except KeyError:
-            return []
-        
-    def __weight_for_term(self, term):
-        try:
-            return self.db["t=" + term][1]
+            return self.db["t=" + term]
         except KeyError:
             return []
     
@@ -56,103 +40,40 @@ class ReviewFinder:
         except KeyError:
             return []
     
+    def __review_result(self, review_id, weight):
+        review = self.db["r=" + review_id]
+        text, business_id, stars, date = review
+        return ReviewResult(review_id=review_id, weight=weight, text=text, stars=tuple([True] * stars + [False] * (5-stars)), date=date, business=self.__business(business_id))
+    
     def __business(self, business_id):
         name, categories, stars = self.db["b=" + business_id]
         return Business(business_id=business_id, url=to_url(name, self.city), name=name, categories=categories, stars=tuple([True] * int(stars) + [False] * (5-int(stars))))
-    
-    def __top_topics(self, review_id):
-        results = []
-        for topic, score in sorted(self.db["rt=" + review_id], key=itemgetter(1), reverse=True):
-            _, (name, color) = self.db["c=" + str(topic)]
-            results.append((topic, name, color))
-        return results
-        
-    def all_topics(self):
-        topic = 1
-        results = []
-        while "c=" + str(topic) in self.db:
-            _, (name, color) = self.db["c=" + str(topic)]
-            if name != 'zzz':
-                results.append((topic, name, color))
-            topic+=1
-        return results
-        
+
     def find_reviews(self, keywords, limit=None):
-        
-        review_results = {}
-        
-        terms = tokenize_regex.findall(keywords.lower())
-        for term in terms:
+        topics_by_weight = defaultdict(float)
+        for term in tokenize_regex.findall(keywords.lower()):
             if term not in stopwords:
-                weight_for_term = self.__weight_for_term(term)
-                for review, weight in self.__review_list_for_term(term):
-                    if review not in review_results:
-                        text, business_id, stars = self.db["r=" + review]
-                        review_results[review] = (0.0, text, business_id, stars)
-                    score, text, business_id, stars = review_results[review]
-                    business_categories = self.db["b=" + business_id]
-                    review_results[review] = ((score + weight * weight_by_star[stars] + CATEGORIES_WEIGHT * len([term for term in terms if term in business_categories])) / weight_for_term, text, business_id, stars)
-        reviews = sorted(review_results.items(), key=lambda (review, props): props[0], reverse=True)[:limit]
+                for topic, weight in self.__topic_list_for_term(term):
+                    topics_by_weight[topic] += weight
         
-        return [ReviewResult(review_id=review_id,
-                             weight=props[0],
-                             text=props[1],
-                             stars=tuple([True] * props[3] + [False] * (5-props[3])),
-                             business=self.__business(props[2]),
-                             topics=self.__top_topics(review_id)[:5]) for review_id, props in review_results.items()]
+        reviews_by_weight = defaultdict(float)
+        for topic, topic_weight in topics_by_weight.items():
+            for review, review_weight in self.__review_list_for_topic(str(topic)):
+                reviews_by_weight[review] += topic_weight * review_weight
+        
+        reviews = sorted(reviews_by_weight.items(), key=itemgetter(1), reverse=True)
+        if limit is not None:
+            reviews = reviews[:limit]
+        
+        return [self.__review_result(r[0], r[1]) for r in reviews]
     
     def find_more(self, review_id, limit=None):
+        review_text = self.db["r=" + review_id][0]
+        print(len(review_text))
+        return [review for review in self.find_reviews(review_text, limit) if review.review_id != review_id]
         
-        review_results = {}
-        
-        this_text, this_business_id, this_stars = self.db["r=" + review_id]
-        
-        for topic, topic_weight in self.db["rt=" + review_id]:
-            for review, review_weight in self.db["c=" + str(topic)][0]:
-                if review not in review_results:
-                    text, business_id, stars = self.db["r=" + review]
-                    review_results[review] = (0.0, text, business_id, stars)
-                score, text, business_id, stars = review_results[review]
-                review_results[review] = (score + topic_weight * review_weight * weight_by_star[stars], text, business_id, stars)
-        
-        reviews = sorted(review_results.items(), key=lambda (review, props): props[0], reverse=True)[:limit]
-        
-        return [ReviewResult(review_id=review_id,
-                             weight=0,
-                             text=this_text,
-                             stars=tuple([True] * this_stars + [False] * (5-this_stars)),
-                             business=self.__business(this_business_id),
-                             topics=self.__top_topics(review_id)[:5])] + [ReviewResult(review_id=review_id,
-                                                                                       weight=props[0],
-                                                                                       text=props[1],
-                                                                                       stars=tuple([True] * props[3] + [False] * (5-props[3])),
-                                                                                       business=self.__business(props[2]),
-                                                                                       topics=self.__top_topics(review_id)[:5]) for review_id, props in reviews]
-    
-    def find_by_topic(self, topic, limit=None):
-        
-        review_results = {}
-        
-        for review, review_weight in self.db["c=" + topic][0][:limit]:
-            if review not in review_results:
-                text, business_id, stars = self.db["r=" + review]
-                review_results[review] = (0.0, text, business_id, stars)
-            score, text, business_id, stars = review_results[review]
-            review_results[review] = (score + review_weight * weight_by_star[stars], text, business_id, stars)
-        
-        return [ReviewResult(review_id=review_id,
-                             weight=props[0],
-                             text=props[1],
-                             stars=tuple([True] * props[3] + [False] * (5-props[3])),
-                             business=self.__business(props[2]),
-                             topics=self.__top_topics(review_id)[:5]) for review_id, props in review_results.items()]
-    
     def find_businesses(self, review_id, business_id, limit=None):
         this_business = self.__business(business_id)
         
-        other_businesses = groupby([r for r in sorted(self.find_more(review_id, limit), key=itemgetter(4)) if r.business.business_id!=business_id], key=itemgetter(4))
+        other_businesses = groupby([r for r in sorted(self.find_more(review_id, limit), key=itemgetter(5)) if r.business.business_id!=business_id], key=itemgetter(5))
         return [BusinessResult(business=this_business, pertinent_reviews=[])] + [BusinessResult(business=a[0], pertinent_reviews=list(a[1])) for a in other_businesses]
-
-    def topic_name_by_id(self, topic_id):
-      _, (name, color) = self.db["c=" + str(topic_id)]
-      return name

@@ -121,7 +121,6 @@
 			for (j=0;j<contents.length;j++){
 				for( i = 0; i < highLight.length; i++ ){
 					if(stopwords.indexOf(highLight[i]) == -1)  {
-						//contents[j] = contents[j].getElementsByClassName("more");
 						contents[j].innerHTML = delimiter(contents[j].innerHTML, highLight[i]); 
 					}
 				}
@@ -159,6 +158,22 @@
 				return false;
 			}
 		}
+
+		$(function(){
+			$('.category_link').click(function(){
+				var cityName = "";
+				var cities = document.getElementsByName('location');
+				for (var i = 0, length = cities.length; i < length; i++) {
+					if (cities[i].checked) {
+						cityName = cities[i].value;
+						console.log(cityName);
+						break;
+					}
+				}
+
+				$(this).attr('href','/reviews?city='+cityName+'&keywords='+$(this).text());
+			});
+		});
 
 	</script>
 </head>
@@ -217,7 +232,12 @@
 									{% if forloop.first %}</span>{% endif %}
 								</a>
 							</p>
-							<p class="text-center">Categories : {{ business.business.categories}}</p>		
+							<!-- <span class="text-center">Categories : {{ business.business.categories}}</span> -->
+							<span style="float:center" class="text-center">Category : 
+								{% for c in business.business.categories %}
+								<a class="category_link text-center" href="" >{{c}}</a>
+								{% endfor %}
+							</span>		
 						</div>				<!-- <a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}">Find more Reviews</a>
 						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{review.review_id}}">See this Business</a> -->
 						<!-- <br><br> -->

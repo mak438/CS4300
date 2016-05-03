@@ -125,7 +125,6 @@
 			for (j=0;j<contents.length;j++){
 				for( i = 0; i < highLight.length; i++ ){
 					if(stopwords.indexOf(highLight[i]) == -1)  {
-					//contents[j] = contents[j].getElementsByClassName("more");
 					contents[j].innerHTML = delimiter(contents[j].innerHTML, highLight[i]); 
 				}
 			}
@@ -178,6 +177,22 @@
 				$(this).attr('href','/reviews?city='+cityName+'&keywords='+$(this).text());
     // or alert($(this).hash();
 });
+		});
+
+		$(function(){
+			$('.topics_link').click(function(){
+				var cityName = "";
+				var cities = document.getElementsByName('location');
+				for (var i = 0, length = cities.length; i < length; i++) {
+					if (cities[i].checked) {
+						cityName = cities[i].value;
+						console.log(cityName);
+						break;
+					}
+				}
+
+				$(this).attr('href','/reviewsByTopic?city='+cityName+'&topic='+$(this).attr('data'));
+			});
 		});
 	</script>
 </head>
@@ -270,10 +285,10 @@
 						{% endif %}
 
 						<div>
-							{% for t in review.topics %}
+							{% for tid,tname,tcolor in review.topics %}
 
-							<div style="display:inline;background-color:#ebccd1;margin:1px">
-								<a class="category_link" href="">{{t}}</a>
+							<div style="display:inline;background-color:{{tcolor}};margin:1px">
+								<a class="topics_link" href="" data={{tid}}>{{tname}}</a>
 							</div>
 
 							{% endfor %}
