@@ -19,7 +19,8 @@ def moreReviews(request):
     return render_to_response('./moreReviews.html', {'city': city, 'reviews': f.find_more(str(request.GET.get('review_id')), 20), 'reviewtext': str(request.GET.get('reviewtext'))})
 
 def home(request):
-    return render_to_response('./index.html');
+    f = ReviewFinder('Urbana')
+    return render_to_response('./index.html', {'topics': f.all_topics()})
 
 def showBusinesses(request):
     city = request.GET.get('city')

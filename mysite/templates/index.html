@@ -145,6 +145,15 @@
 		</div>
 		<a id="submitBtn" class="btn btn-danger" onclick="showReviews()"> Go! </a>
 	</form>
+                        <div>
+                            {% for tid,tname,tcolor in topics %}
+
+                            <div style="display:inline;background-color:{{tcolor}};margin:1px">
+                                <a class="topics_link" href="" data={{tid}}>{{tname}}</a>
+                            </div>
+
+                            {% endfor %}
+                        </div>
 
 
 	
