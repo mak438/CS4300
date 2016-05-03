@@ -18,11 +18,11 @@ from django.contrib import admin
 from . import views
 
 urlpatterns = [
+    url(r'^reviewsByTopic', views.reviewsByTopic, name='reviewsByTopic'),
     url(r'^reviews', views.reviews, name='reviews'),
     url(r'^moreReviews', views.moreReviews, name='moreReviews'),
     url(r'^pt/', include('project_template.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^home', views.home, name='reviews'),
     url(r'^showBusinesses',views.showBusinesses,name = 'showBusinesses'),
-    url(r'^reviewsByTopic', views.reviewsByTopic, name='reviewsByTopic')
 ]
