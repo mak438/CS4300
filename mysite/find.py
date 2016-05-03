@@ -99,7 +99,7 @@ class ReviewFinder:
                              text=props[1],
                              stars=tuple([True] * props[3] + [False] * (5-props[3])),
                              business=self.__business(props[2]),
-                             topics=self.__top_topics(review_id)[:5]) for review_id, props in review_results.items()]
+                             topics=self.__top_topics(review_id)[:5]) for review_id, props in review_results]
     
     def find_more(self, review_id, limit=None):
         
