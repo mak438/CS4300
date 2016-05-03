@@ -151,10 +151,9 @@
 		function myFunction(){
 			var query = document.getElementById("searchInput");
 			
-			//var previoussearch = "{{reviewtext}}";
-			//query.value = previoussearch;
-			//var highLight = previoussearch.split(" "),
-			
+			var previoussearch = "{{reviewtext}}";
+			query.value = previoussearch;
+			var highLight = previoussearch.split(" "),
 			contents = document.getElementsByClassName("reviewpart");
 			for (j=0;j<contents.length;j++){
 				for( i = 0; i < highLight.length; i++ ){
@@ -210,7 +209,7 @@
 					}
 				}
 
-				$(this).attr('href','/reviews?city='+cityName+'&keywords='+$(this).text());
+				$(this).attr('href','/reviewsByTopics?city='+cityName+'&topic='+$(this).attr('data'));
     // or alert($(this).hash();
 });
 		});
@@ -241,6 +240,9 @@
 		<a id="submitBtn" class="btn btn-danger" onclick="showReviews()"> Go! </a>
 	</form>
 	<br><br>
+
+	
+
 	<div class="reviewDiv" >
 		<br>
 
@@ -253,7 +255,11 @@
 						<div align="left" class="panel-heading reviewHeader" >
 							Review : {{ forloop.counter }}  |  {{review.business.name}} 
 						</div>
+						<!-- <div align="left" class="panel" style="margin-bottom: 0em">
+							&nbsp;&nbsp;Under : {{review.business.categories}}
+						</div> -->
 						<div class="panel">
+							<!-- <span style="float:left"> &nbsp;&nbsp;{{ review.date }}	</span>					 -->
 							<span style="float:left">&nbsp;&nbsp;Under : 
 								{% for c in review.business.categories %}
 								<a class="category_link" href="" >{{c}}</a>
@@ -273,19 +279,20 @@
 								{% endfor %}&nbsp;
 							</span>
 						</div>
-
+						<!-- <div class="reviewpart"> -->
 						<div class="more reviewTextAlign reviewpart">
 							{{ review.text }}
 						</div>
 
+				
 						<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}&reviewtext={{reviewtext}}">Find More Reviews</a>
 						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}&reviewtext={{reviewtext}}">Show Similar Businesses</a>
 						<br><br>
 						<div>
-							{% for t,c in review.topics %}
+							{% for i,t,c in review.topics %}
 
 							<div style="display:inline;background-color:{{c}};margin:1px">
-								<a class="category_link" href="">{{t}}</a>
+								<a class="category_link" href="" data={{i}}>{{t}}</a>
 							</div>
 
 							{% endfor %}
