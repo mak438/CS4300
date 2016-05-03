@@ -225,7 +225,7 @@
 					}
 				}
 
-				$(this).attr('href','/reviewsByTopic?city='+cityName+'&topic='+$(this).text());
+				$(this).attr('href','/reviewsByTopic?city='+cityName+'&topic='+$(this).attr('data'));
 			});
 		});
 
@@ -358,10 +358,10 @@
 						<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}&reviewtext={{reviewtext}}">Show Similar Businesses</a>
 						<br><br>
 						<div>
-							{% for t,c in review.topics %}
+							{% for tid,tname,tcolor in review.topics %}
 
-							<div style="display:inline;background-color:{{c}};margin:1px">
-								<a class="topics_link" href="">{{t}}</a>
+							<div style="display:inline;background-color:{{tcolor}};margin:1px">
+								<a class="topics_link" href="" data={{tid}}>{{tname}}</a>
 							</div>
 
 							{% endfor %}
