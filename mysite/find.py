@@ -65,6 +65,16 @@ class ReviewFinder:
             results.append((topic, name, color))
         return results
         
+    def all_topics(self):
+        topic = 1
+        results = []
+        while "c=" + str(topic) in self.db:
+            _, (name, color) = self.db["c=" + str(topic)]
+            if name != 'zzz':
+                results.append((topic, name, color))
+            topic+=1
+        return results
+        
     def find_reviews(self, keywords, limit=None):
         
         review_results = {}
