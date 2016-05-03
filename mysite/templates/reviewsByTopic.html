@@ -82,12 +82,11 @@
 
 			document.getElementById(cityName).checked = true;
 
-		
+
 		});
 
 		function myFunction(){
 			var query = document.getElementById("searchInput");
-			debugger;
 			var previoussearch = "{{topic}}";
 			query.value = previoussearch;
 			var highLight = previoussearch.split(" "),
@@ -186,7 +185,8 @@
 		<br><br>
 
 		<div class="form-group">
-			<input id="searchInput" type="text" name="search" onkeypress="return onEnter()" class="form-control" placeholder="Your Input">
+			<p class="formColor">	Topic :  </p>
+			<input id="searchInput" type="text" name="search" onkeypress="return onEnter()" class="form-control" placeholder="Your Input goes here">
 		</div>
 		<a id="submitBtn" class="btn btn-danger" onclick="showReviews()"> Go! </a>
 	</form>
