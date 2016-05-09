@@ -26,7 +26,7 @@ def moreReviews(request):
         f = ReviewFinderBaseline(city)
     else:
         f = ReviewFinder(city)
-    return render_to_response('./moreReviews.html', {'city': city, 'reviews': f.find_more(str(request.GET.get('review_id')), 20), 'reviewtext': str(request.GET.get('reviewtext'))})
+    return render_to_response('./moreReviews.html', {'city': city, 'reviews': f.find_more(str(request.GET.get('review_id')), str(request.GET.get('reviewtext')), 20), 'reviewtext': str(request.GET.get('reviewtext'))})
 
 def home(request):
     f = ReviewFinder('Urbana')
