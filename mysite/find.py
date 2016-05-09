@@ -103,7 +103,7 @@ class ReviewFinder:
                              business=self.__business(props[2]),
                              topics=self.__top_topics(review_id)[:5]) for review_id, props in review_results.items()]
     
-    def find_more(self, review_id, query, limit, exclude_this_business):
+    def find_more(self, review_id, query, limit, include_this_business):
         
         review_results = {}
         
@@ -129,20 +129,20 @@ class ReviewFinder:
                                 business=self.__business(this_business_id),
                                 topics=self.__top_topics(review_id)[:5])]
         
-        if exclude_this_business:
-            results += [ReviewResult(review_id=review_id1,
-                                     weight=props[0],
-                                     text=props[1],
-                                     stars=tuple([True] * props[3] + [False] * (5-props[3])),
-                                     business=self.__business(props[2]),
-                                     topics=self.__top_topics(review_id1)[:5]) for review_id1, props in reviews if this_business_id != props[2]]
-        else:
+        if include_this_business:
             results += [ReviewResult(review_id=review_id1,
                                      weight=props[0],
                                      text=props[1],
                                      stars=tuple([True] * props[3] + [False] * (5-props[3])),
                                      business=self.__business(props[2]),
                                      topics=self.__top_topics(review_id1)[:5]) for review_id1, props in reviews if review_id1 != review_id]
+        else:
+            results += [ReviewResult(review_id=review_id1,
+                                     weight=props[0],
+                                     text=props[1],
+                                     stars=tuple([True] * props[3] + [False] * (5-props[3])),
+                                     business=self.__business(props[2]),
+                                     topics=self.__top_topics(review_id1)[:5]) for review_id1, props in reviews if this_business_id != props[2]]
        
         return results
     

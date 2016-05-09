@@ -73,9 +73,18 @@
 				if(param[0] == "keywords"){
 					searchText = param[1];
 				}
+				if(param[0] == "this_business_checked"){
+					ischecked = param[1];
+				}
 			}
 
 			document.getElementById(cityName).checked = true;
+			if (ischecked === "false"){
+				document.getElementById("samebusinesscheck").checked = false;
+			}
+			else{
+				document.getElementById("samebusinesscheck").checked = true;
+			}
 
 			/*var showChar = 500;
 			var ellipsestext = "...";
@@ -194,6 +203,21 @@
 				$(this).attr('href','/reviewsByTopic?city='+cityName+'&topic='+$(this).attr('data'));
 			});
 		});
+
+		$(function(){
+			$('.checkbox').change(function(){
+				
+			if(this.checked){
+				window.location.href = window.location.href.replace("this_business_checked=false", "this_business_checked=true")
+			}
+			else{
+				window.location.href = window.location.href.replace("this_business_checked=true", "this_business_checked=false")	
+			}
+
+			
+			});
+		});
+
 	</script>
 </head>
 
@@ -232,7 +256,7 @@
 						{% if forloop.counter == 1 %}
 						<div align="left" class="panel-heading selectedreviewHeader" >
 							{% if forloop.first %}<span style="font-size: 150%; font-weight: bold;">{% endif %}
-									SELECTED REVIEW  |  {{review.business.name}}
+									SELECTED REVIEW  |  {{review.business.name}}<input type="checkbox" class= "checkbox" id="samebusinesscheck">Include this business</input>
 							{% if forloop.first %}</span>{% endif %}
 						</div>
 						{% else %}
@@ -275,11 +299,11 @@
 						</div>
 						<!-- </div> -->
 						{% if forloop.first %}
-							<a class="btn btn-primary" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}&reviewtext={{reviewtext}}">Show Similar Reviews</a>
+							<a class="btn btn-primary" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}&reviewtext={{reviewtext}}&this_business_checked=true">Show Similar Reviews</a>
 							<a class="btn btn-primary" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}&reviewtext={{reviewtext}}">Show Similar Businesses</a>
 							<br><br>
 						{% else %}
-							<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}&reviewtext={{reviewtext}}">Show Similar Reviews</a>
+							<a class="btn btn-danger" align="center" href="/moreReviews?city={{ city }}&review_id={{ review.review_id }}&reviewtext={{reviewtext}}&this_business_checked=true">Show Similar Reviews</a>
 							<a class="btn btn-danger" align="center" href="/showBusinesses?city={{ city }}&review_id={{review.review_id}}&business_id={{review.business.business_id}}&reviewtext={{reviewtext}}">Show Similar Businesses</a>
 							<br><br>
 						{% endif %}
