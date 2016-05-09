@@ -38,4 +38,4 @@ def showBusinesses(request):
         f = ReviewFinderBaseline(city)
     else:
         f = ReviewFinder(city)
-    return render_to_response('./showBusinesses.html',{'city':city, 'businesses': f.find_businesses(str(request.GET.get('review_id')),str(request.GET.get('business_id')),20), 'reviewtext': str(request.GET.get('reviewtext'))})
+    return render_to_response('./showBusinesses.html',{'city':city, 'businesses': f.find_businesses(str(request.GET.get('review_id')),str(request.GET.get('business_id')),str(request.GET.get('reviewtext')),20), 'reviewtext': str(request.GET.get('reviewtext'))})

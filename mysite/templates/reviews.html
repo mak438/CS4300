@@ -359,9 +359,9 @@
 						<br><br>
 						<div>
 							{% for tid,tname,tcolor in review.topics %}
-
-							<div style="display:inline;background-color:{{tcolor}};margin:2px">
-								<a class="topics_link" href="" data={{tid}}>{{tname}}</a>
+							
+							<div style="display:inline;background-color:#fc9272;margin:1px;border-radius:5px;">
+								<a class="topics_link" href="" data={{tid}} style="color:black;opacity:1">{{tname}}</a>
 							</div>
 
 							{% endfor %}

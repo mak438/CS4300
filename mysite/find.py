@@ -164,10 +164,10 @@ class ReviewFinder:
                              business=self.__business(props[2]),
                              topics=self.__top_topics(review_id)[:5]) for review_id, props in review_results.items()]
     
-    def find_businesses(self, review_id, business_id, limit):
+    def find_businesses(self, review_id, business_id, query, limit):
         this_business = self.__business(business_id)
         
-        other_businesses = groupby([r for r in sorted(self.find_more(review_id, limit), key=itemgetter(4)) if r.business.business_id!=business_id], key=itemgetter(4))
+        other_businesses = groupby([r for r in sorted(self.find_more(review_id, query, limit, "true"), key=itemgetter(4)) if r.business.business_id!=business_id], key=itemgetter(4))
         return [BusinessResult(business=this_business, pertinent_reviews=[])] + [BusinessResult(business=a[0], pertinent_reviews=list(a[1])) for a in other_businesses]
 
     def topic_name_by_id(self, topic_id):
