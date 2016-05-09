@@ -1,32 +1,32 @@
 0-Mediterranean-#ffffcc
 1-Breakfast-#ffff99
 2-Service-#ffff66
-3-Bad service-#ffccff
+3-Bad Service-#ffccff
 4-zzz
 5-Vietnamese-#ffcccc
 6-Bar-#ffcc99
 7-Steakhouse-#ff99ff
 8-Pizza-#ff9999
 9-Italian-#ff99cc
-10-Good food-#ccffcc
+10-Good Food-#ccffcc
 11-Spicy-#ccff99
 12-Chinese-#ffff99
 13-Romantic-#cc6633
-14-Burger place-#cccccc
+14-Burger Place-#cccccc
 15-Breakfast-#cccc99
-16-Sea food-#ccff99
+16-Sea Food-#ccff99
 17-Service-#cc99999
 18-zzz
 19-Sandwich-#99ff99
 20-Mexican-#99cc99
 21-Indian-#99ff66
-22-Mall-#99fffff
-23-Good food-#9999666
-24-Good quality-#66ff66
-25-Thai food-#66cc66
+22-Mall-#99ffff
+23-Good Food-#999966
+24-Good Quality-#66ff66
+25-Thai Food-#66cc66
 26-Cafe-#66cc99
-27-Family restaurant-#6699cc
-28-Bad rating-#669900
+27-Family Restaurant-#6699cc
+28-Bad Rating-#669900
 29-Diner-#6699ff
 30-Non Vegeterian-#cc6600
 31-Delivery-#cccc00
@@ -34,7 +34,7 @@
 33-Lunch-#CCCC00
 34-Pleasant-#99cc33
 35-Vegan-#999900
-36-Regular visit-#999999
-37-Long waits-#99cc99
+36-Regular Visit-#999999
+37-Wait Time-#99cc99
 38-Meat-#996699
 39-Bar-#33cc66
