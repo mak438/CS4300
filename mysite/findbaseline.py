@@ -69,8 +69,7 @@ class ReviewFinderBaseline:
     
     def find_more(self, review_id, query, limit, include_this_business):
         review_text = self.db["r=" + review_id][0]
-        print(len(review_text))
-        return [review for review in self.find_reviews(review_text, limit) if review.review_id != review_id]
+        return [self.__review_result(review_id, 0)] + [review for review in self.find_reviews(review_text, limit) if review.review_id != review_id]
         
     def find_businesses(self, review_id, business_id, query, limit):
         this_business = self.__business(business_id)
