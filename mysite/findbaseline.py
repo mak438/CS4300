@@ -49,7 +49,7 @@ class ReviewFinderBaseline:
         name, categories, stars = self.db["b=" + business_id]
         return Business(business_id=business_id, url=to_url(name, self.city), name=name, categories=categories, stars=tuple([True] * int(stars) + [False] * (5-int(stars))))
 
-    def find_reviews(self, keywords, limit=None):
+    def find_reviews(self, keywords, limit):
         topics_by_weight = defaultdict(float)
         for term in tokenize_regex.findall(keywords.lower()):
             if term not in stopwords:
@@ -67,12 +67,12 @@ class ReviewFinderBaseline:
         
         return [self.__review_result(r[0], r[1]) for r in reviews]
     
-    def find_more(self, review_id, limit=None):
+    def find_more(self, review_id, query, limit, include_this_business):
         review_text = self.db["r=" + review_id][0]
         print(len(review_text))
         return [review for review in self.find_reviews(review_text, limit) if review.review_id != review_id]
         
-    def find_businesses(self, review_id, business_id, limit=None):
+    def find_businesses(self, review_id, business_id, query, limit):
         this_business = self.__business(business_id)
         
         other_businesses = groupby([r for r in sorted(self.find_more(review_id, limit), key=itemgetter(5)) if r.business.business_id!=business_id], key=itemgetter(5))
